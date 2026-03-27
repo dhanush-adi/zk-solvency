@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hyper - Blockchain Website</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="style.css?v=1774636708102">
+</head>
+<body>
+    <div class="bg-gradient"></div>
+
+    <nav class="navbar">
+        <ul class="nav-left">
+            <li><a href="index.html" style="color: var(--text-secondary); text-decoration: none;">Home</a></li>
+            <li><a href="dashboard.html" style="color: var(--text-secondary); text-decoration: none;">Dashboard</a></li>
+            <li><a href="proof-details.html" style="color: var(--text-secondary); text-decoration: none;">Proof Details</a></li>
+        </ul>
+        
+        <div class="nav-logo">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="12" cy="12" r="10" stroke="#fff" stroke-width="2"/>
+                <path d="M16 8L8 16" stroke="#fff" stroke-width="2"/>
+            </svg>
+            <span>ZK-SOLVENCY</span>
+        </div>
+        
+        <div class="nav-right" style="display: flex; gap: 2rem; align-items: center;">
+            <a href="auditor.html" class="nav-link" style="text-decoration: none;">Auditor</a>
+            <a href="inclusion.html" class="nav-link" style="text-decoration: none;">Verify Inclusion</a>
+        </div>
+    </nav>
+
+    <main class="hero">
+        
+        <div class="hero-bg-text">ZK-PROOF</div>
+        
+        <!-- Center 3D visual removed as requested -->
+
+        <div class="hero-content">
+            <div class="hero-left">
+                <h1 class="hero-title">Zero-Knowledge<br>Solvency.</h1>
+                
+                <div class="hero-metrics">
+                    <div class="metric">
+                        <div class="metric-label"><span class="dot"></span> Current Solvency</div>
+                        <div class="metric-value">112.4%</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label"><span class="dot"></span> Total Verified</div>
+                        <div class="metric-value">$1.24B</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="hero-right">
+                <p class="hero-desc">
+                    Cryptographic verification of institutional solvency. Verify your assets with absolute mathematical certainty, without exposing sensitive data.
+                </p>
+                <button class="btn-primary" onclick="window.location.href='dashboard.html'">View Dashboard</button>
+                
+                <div class="sc-card" onclick="window.location.href='inclusion.html'" style="cursor: pointer;">
+                    <span>Verify Wallet<br>Inclusion</span>
+                    <i class="ph-bold ph-arrow-right"></i>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <section class="features">
+                <div class="feature-cards">
+            <!-- Card 1 -->
+            <div class="glass-card" onclick="window.location.href='dashboard.html'">
+                <div class="gc-header">
+                    <div class="gc-icon" style="background: rgba(59, 130, 246, 0.1); color: #60a5fa;"><i class="ph-bold ph-shield-check"></i></div>
+                    <i class="ph-bold ph-arrow-up-right gc-arrow"></i>
+                </div>
+                <h3 class="gc-title">Proof of Reserves</h3>
+                <p class="gc-text">View real-time proof of reserves, current solvency metrics, and the latest cryptographic hashes directly on-chain.</p>
+            </div>
+            
+            <!-- Card 2 -->
+            <div class="glass-card gc-active" onclick="window.location.href='inclusion.html'">
+                <div class="gc-header">
+                    <div class="gc-icon" style="background: rgba(16, 185, 129, 0.1); color: #10b981;"><i class="ph-bold ph-magnifying-glass"></i></div>
+                    <i class="ph-bold ph-arrow-up-right gc-arrow"></i>
+                </div>
+                <h3 class="gc-title">Inclusion Checker</h3>
+                <p class="gc-text">Cryptographically verify if your specific wallet liabilities are correctly included in the global proof of reserves tree.</p>
+            </div>
+            
+            <!-- Card 3 -->
+            <div class="glass-card" onclick="window.location.href='auditor.html'">
+                <div class="gc-header">
+                    <div class="gc-icon" style="background: rgba(139, 92, 246, 0.1); color: #a78bfa;"><i class="ph-bold ph-lock-key"></i></div>
+                    <i class="ph-bold ph-arrow-up-right gc-arrow"></i>
+                </div>
+                <h3 class="gc-title">Auditor Terminal</h3>
+                <p class="gc-text">Advanced programmatic audit tools, compliance reporting, and zero-knowledge verification portals for institutional analysts.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about-section" style="max-width: 1200px; margin: 6rem auto; padding: 0 2rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 4rem; align-items: center; position: relative; z-index: 2;">
+        <div>
+            <h2 style="font-size: 2.5rem; font-family: 'Outfit'; color: var(--text-primary); margin-bottom: 1.5rem;">Why ZK-Solvency?</h2>
+            <p style="color: var(--text-secondary); font-size: 1.1rem; line-height: 1.8; margin-bottom: 1.5rem;">The digital asset industry suffers from a lack of transparency. Traditional audits are slow, expensive, and rely on trusting human auditors who only look at snapshots in time.</p>
+            <p style="color: var(--text-secondary); font-size: 1.1rem; line-height: 1.8; margin-bottom: 2rem;">ZK-Solvency revolutionizes trust by enabling continuous, cryptographically-proven audits of institutional reserves and liabilities. We utilize zero-knowledge proofs to allow exchanges and custodians to mathematically guarantee their solvency without revealing sensitive commercial data or user balances.</p>
+            <div style="display: flex; gap: 1.5rem;">
+                <div style="display: flex; align-items: center; gap: 0.5rem; color: var(--text-primary); font-weight: 500;"><i class="ph-fill ph-check-circle" style="color: var(--accent); font-size: 1.25rem;"></i> Cryptographic Certainty</div>
+                <div style="display: flex; align-items: center; gap: 0.5rem; color: var(--text-primary); font-weight: 500;"><i class="ph-fill ph-eye-slash" style="color: var(--accent); font-size: 1.25rem;"></i> Absolute Privacy</div>
+            </div>
+        </div>
+        <div style="position: relative; height: 100%; min-height: 400px; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 24px; padding: 3rem; display: flex; flex-direction: column; justify-content: center; backdrop-filter: blur(10px);">
+            <div style="width: 80px; height: 80px; border-radius: 20px; background: rgba(139, 92, 246, 0.1); border: 1px solid rgba(139, 92, 246, 0.3); display: flex; align-items: center; justify-content: center; margin-bottom: 2rem;">
+                <i class="ph-fill ph-lock-key" style="font-size: 3rem; color: #a78bfa;"></i>
+            </div>
+            <h3 style="font-size: 1.5rem; color: var(--text-primary); font-family: 'Outfit'; margin-bottom: 1rem;">Institutional Grade</h3>
+            <p style="color: var(--text-secondary); line-height: 1.6;">Built for enterprise custodians, exchanges, and funds holding billions in assets. Verified on-chain daily.</p>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="how-it-works" style="max-width: 1200px; margin: 0 auto 6rem; padding: 4rem 2rem; text-align: center; position: relative; z-index: 2;">
+        <h2 style="font-size: 2.5rem; font-family: 'Outfit'; color: var(--text-primary); margin-bottom: 1rem;">How ZK Audits Work</h2>
+        <p style="color: var(--text-secondary); max-width: 600px; margin: 0 auto 4rem; line-height: 1.6; font-size: 1.1rem;">A completely trustless pipeline from institutional wallets to public on-chain verification.</p>
+        
+                <div class="steps-grid">
+            <div class="step-card">
+                <div class="step-num">01</div>
+                <h3 class="step-title">Data Ingestion</h3>
+                <p class="step-text">The institution's entire liability set and asset lists are securely ingested into the ZK prover circuit locally.</p>
+            </div>
+            
+            <div class="step-card">
+                <div class="step-num" style="color: #60a5fa;">02</div>
+                <h3 class="step-title">Circuit Generation</h3>
+                <p class="step-text">A zk-SNARK proof is generated verifying Assets > Liabilities, culminating in an unforgeable Merkle Root.</p>
+            </div>
+            
+            <div class="step-card">
+                <div class="step-num" style="color: #10b981;">03</div>
+                <h3 class="step-title">On-Chain Publication</h3>
+                <p class="step-text">The mathematical proof and root hash are securely published on-chain, allowing anyone to verify status.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer style="border-top: 1px solid var(--border-color); padding: 4rem 2rem 2rem; position: relative; z-index: 2; background: var(--card-inner-bg);">
+        <div style="max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 4rem; margin-bottom: 4rem;">
+            <div style="grid-column: span 2;">
+                <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 1.5rem; font-weight: 700; color: var(--text-primary); margin-bottom: 1.5rem;">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="12" r="10" stroke="#fff" stroke-width="2"/>
+                        <path d="M16 8L8 16" stroke="#fff" stroke-width="2"/>
+                    </svg>
+                    ZK-SOLVENCY
+                </div>
+                <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.6; max-width: 300px;">Setting the universal standard for institutional transparency. Zero-knowledge cryptographic proofs of reserves.</p>
+            </div>
+            <div>
+                <h4 style="color: var(--text-primary); font-family: 'Outfit'; margin-bottom: 1.5rem; font-size: 1.1rem;">Platform</h4>
+                <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.8rem;">
+                    <li><a href="dashboard.html" style="color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; transition: color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--text-secondary)'">Dashboard</a></li>
+                    <li><a href="auditor.html" style="color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; transition: color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--text-secondary)'">Auditor Gateway</a></li>
+                    <li><a href="inclusion.html" style="color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; transition: color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--text-secondary)'">Inclusion Checker</a></li>
+                    <li><a href="proof-details.html" style="color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; transition: color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--text-secondary)'">Proof Details Grid</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 style="color: var(--text-primary); font-family: 'Outfit'; margin-bottom: 1.5rem; font-size: 1.1rem;">Resources</h4>
+                <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.8rem;">
+                    <li><a href="#" style="color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; transition: color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--text-secondary)'">Whitepaper</a></li>
+                    <li><a href="#" style="color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; transition: color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--text-secondary)'">Documentation</a></li>
+                    <li><a href="#" style="color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; transition: color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--text-secondary)'">Github Repo</a></li>
+                </ul>
+            </div>
+        </div>
+        <div style="max-width: 1200px; margin: 0 auto; text-align: center; border-top: 1px solid var(--border-color); padding-top: 2rem;">
+            <p style="color: var(--text-secondary); font-size: 0.85rem;">&copy; 2026 ZK-Solvency Inc. All rights reserved. Mathematics sets us free.</p>
+        </div>
+    </footer>
+
+    <script src="script.js?v=1774636708102"></script>
+</body>
+</html>

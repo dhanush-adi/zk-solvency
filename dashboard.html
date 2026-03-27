@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | ZK-Solvency</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="style.css?v=1774635105392">
+    <style>
+        .premium-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2.5rem;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+        }
+        .premium-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
+        .data-label { color: var(--text-secondary); font-size: 0.9rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+        .data-value { color: var(--text-primary); font-family: 'Outfit'; font-size: 3rem; font-weight: 700; line-height: 1; margin-bottom: 1rem; }
+        .data-mono { font-family: monospace; color: #a78bfa; font-size: 1.1rem; word-break: break-all; background: var(--card-inner-bg); padding: 1.25rem 1.5rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.03); margin-top: 0.5rem; }
+        .sub-text { color: var(--text-secondary); font-size: 0.85rem; }
+    </style>
+</head>
+<body>
+    <div class="bg-gradient"></div>
+
+    <nav class="navbar">
+        <ul class="nav-left" style="list-style: none; display: flex; gap: 2rem; margin: 0; padding: 0;">
+            <li><a href="index.html" class="nav-link" style="text-decoration:none;">Home</a></li>
+            <li><a href="dashboard.html" class="nav-link" style="text-decoration:none; color: var(--text-primary); font-weight: 600;">Dashboard</a></li>
+            <li><a href="proof-details.html" class="nav-link" style="text-decoration:none;">Proof Details</a></li>
+        </ul>
+        <div class="nav-logo">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="12" cy="12" r="10" stroke="#fff" stroke-width="2"/>
+                <path d="M16 8L8 16" stroke="#fff" stroke-width="2"/>
+            </svg>
+            <span>ZK-SOLVENCY</span>
+        </div>
+        <div class="nav-right" style="display: flex; gap: 2rem; align-items: center;">
+            <a href="auditor.html" class="nav-link" style="text-decoration: none;">Auditor</a>
+            <a href="inclusion.html" class="nav-link" style="text-decoration: none;">Verify Inclusion</a>
+        </div>
+    </nav>
+
+    <main style="max-width: 1200px; margin: 0 auto; padding: 8rem 2rem 4rem; position: relative; z-index: 2;">
+        <header style="margin-bottom: 4rem; text-align: left;">
+            <h1 style="font-size: 4rem; font-family: 'Outfit', sans-serif; font-weight: 700; margin-bottom: 1rem; color: var(--text-primary); letter-spacing: -0.02em;">Protocol Dashboard</h1>
+            <p style="color: var(--text-secondary); font-size: 1.15rem; max-width: 600px; line-height: 1.6;">Live monitoring of cryptographic insolvency proofs and institutional asset verifications across all supported chains.</p>
+        </header>
+
+        <section class="premium-grid" style="margin-bottom: 2rem;">
+            <div class="premium-card">
+                <div class="data-label">Current Solvency Ratio <i class="ph-fill ph-shield-check" style="color: #10b981; font-size: 1.5rem;"></i></div>
+                <div class="data-value" style="color: #10b981;">112.4%</div>
+                <div class="sub-text" style="margin-top: auto;">Updated 2 mins ago via Zero-Knowledge Proof</div>
+            </div>
+            
+            <div class="premium-card">
+                <div class="data-label">Total Verified Balance <i class="ph-fill ph-wallet" style="color: #60a5fa; font-size: 1.5rem;"></i></div>
+                <div class="data-value">$1.24B</div>
+                <div class="sub-text" style="margin-top: auto;">Cryptographically securing 12,045 wallets</div>
+            </div>
+            
+            <div class="premium-card">
+                <div class="data-label">Next Proof Generation <i class="ph-fill ph-clock-countdown" style="color: #a78bfa; font-size: 1.5rem;"></i></div>
+                <div class="data-value" style="font-size: 2.5rem; color: var(--text-primary);">14h 22m</div>
+                <div style="width: 100%; height: 6px; background: var(--border-color); border-radius: 3px; margin-top: auto; position: relative; overflow: hidden;">
+                    <div style="width: 65%; height: 100%; background: linear-gradient(90deg, #60a5fa, #a78bfa); border-radius: 3px; box-shadow: 0 0 10px rgba(167, 139, 250, 0.5);"></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="premium-card" style="margin-bottom: 4rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2.5rem;">
+                <h2 style="font-size: 1.8rem; font-family: 'Outfit'; color: var(--text-primary);">Latest Cryptographic Data</h2>
+                <a href="proof-details.html" style="color: #a78bfa; text-decoration: none; font-size: 0.9rem; font-weight: 500; display: flex; align-items: center; gap: 0.5rem; transition: opacity 0.2s;" onmouseover="this.style.opacity=0.8" onmouseout="this.style.opacity=1">View Full Details <i class="ph-bold ph-arrow-right"></i></a>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem;">
+                <div>
+                    <span class="data-label" style="display: block; margin-bottom: 0.5rem;">Global Merkle Root</span>
+                    <div class="data-mono">0x8f2c3b4a5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2</div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                    <div>
+                        <span class="data-label" style="display: block; margin-bottom: 0.5rem;">Block Height</span>
+                        <div class="data-mono" style="color: #60a5fa; text-align: center;">18,452,091</div>
+                    </div>
+                    <div>
+                        <span class="data-label" style="display: block; margin-bottom: 0.5rem;">Chain ID</span>
+                        <div class="data-mono" style="color: #60a5fa; text-align: center;">1</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="script.js?v=1774634684703"></script>
+</body>
+</html>

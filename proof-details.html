@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proof Details | ZK-Solvency</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="style.css?v=1774635105392">
+    <style>
+        .premium-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 3rem; backdrop-filter: blur(12px); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); display: flex; flex-direction: column; }
+        .mini-card { background: var(--card-inner-bg); border: 1px solid rgba(255, 255, 255, 0.03); border-radius: 12px; padding: 1.5rem 2rem; display: flex; flex-direction: column; justify-content: center; transition: all 0.2s; }
+        .mini-card:hover { border-color: rgba(255,255,255,0.08); background: var(--card-inner-bg); }
+        .data-label { color: var(--text-secondary); font-size: 0.85rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; }
+        .data-value { font-family: monospace; font-size: 1.8rem; color: #60a5fa; }
+        .hash-box { background: var(--card-inner-bg); padding: 1.5rem 2rem; border-radius: 12px; border: 1px solid var(--border-color); margin-bottom: 1.5rem; }
+        .hash-box .label { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.8rem; text-transform: uppercase; font-weight: 600; letter-spacing: 0.05em; }
+        .hash-box .value { font-family: monospace; color: #a78bfa; word-break: break-all; font-size: 1.15rem; line-height: 1.5; }
+        
+        .timeline-step { display: flex; gap: 2rem; position: relative; margin-bottom: 2.5rem; }
+        .timeline-step:last-child { margin-bottom: 0; }
+        .timeline-node { width: 18px; height: 18px; border-radius: 50%; position: relative; z-index: 2; margin-top: 5px; flex-shrink: 0; }
+        .timeline-line { width: 2px; height: 100%; position: absolute; left: 8px; top: 23px; z-index: 1; }
+        .timeline-content p.title { color: var(--text-primary); font-weight: 600; font-size: 1.25rem; font-family: 'Outfit'; margin-bottom: 0.3rem; }
+        .timeline-content p.desc { color: var(--text-secondary); font-size: 0.95rem; }
+    </style>
+</head>
+<body>
+    <div class="bg-gradient"></div>
+
+    <nav class="navbar">
+        <ul class="nav-left" style="list-style: none; display: flex; gap: 2rem; margin: 0; padding: 0;">
+            <li><a href="index.html" class="nav-link" style="text-decoration:none;">Home</a></li>
+            <li><a href="dashboard.html" class="nav-link" style="text-decoration:none;">Dashboard</a></li>
+            <li><a href="proof-details.html" class="nav-link" style="text-decoration:none; color: var(--text-primary); font-weight: 600;">Proof Details</a></li>
+        </ul>
+        <div class="nav-logo">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="12" cy="12" r="10" stroke="#fff" stroke-width="2"/>
+                <path d="M16 8L8 16" stroke="#fff" stroke-width="2"/>
+            </svg>
+            <span>ZK-SOLVENCY</span>
+        </div>
+        <div class="nav-right" style="display: flex; gap: 2rem; align-items: center;">
+            <a href="auditor.html" class="nav-link" style="text-decoration: none;">Auditor</a>
+            <a href="inclusion.html" class="nav-link" style="text-decoration: none;">Verify Inclusion</a>
+        </div>
+    </nav>
+
+    <main class="page-container" style="max-width: 1200px; margin: 0 auto; padding: 8rem 2rem 4rem; position: relative; z-index: 2;">
+        
+        <header style="margin-bottom: 4rem; display: flex; justify-content: space-between; align-items: flex-end;">
+            <div>
+                <h1 style="font-size: 3.5rem; font-family: 'Outfit', sans-serif; font-weight: 700; margin-bottom: 1rem; color: var(--text-primary); letter-spacing: -0.02em;">Proof Details</h1>
+                <p style="color: var(--text-secondary); font-size: 1.15rem; max-width: 600px; line-height: 1.6;">Granular analysis of zero-knowledge generated cryptographic proofs and underlying block state data.</p>
+            </div>
+            <div style="display: flex; gap: 1rem;">
+                <button style="background: var(--border-color); border: 1px solid rgba(255,255,255,0.1); color: var(--text-primary); padding: 1rem; border-radius: 12px; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='var(--border-color)'"><i class="ph-bold ph-download-simple" style="font-size: 1.6rem;"></i></button>
+                <button style="background: var(--border-color); border: 1px solid rgba(255,255,255,0.1); color: var(--text-primary); padding: 1rem; border-radius: 12px; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='var(--border-color)'"><i class="ph-bold ph-share-network" style="font-size: 1.6rem;"></i></button>
+            </div>
+        </header>
+
+        <section style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-bottom: 3rem;">
+            <!-- Mini Cards -->
+            <div class="mini-card">
+                <p class="data-label">Status</p>
+                <div>
+                    <span style="background: rgba(16, 185, 129, 0.15); color: #10b981; padding: 0.4rem 1rem; border-radius: 20px; font-size: 0.9rem; font-weight: 600; border: 1px solid rgba(16, 185, 129, 0.3); display: inline-flex; align-items: center; gap: 0.4rem;"><i class="ph-bold ph-check"></i> Verified</span>
+                </div>
+            </div>
+            <div class="mini-card">
+                <p class="data-label">Block Height</p>
+                <h4 class="data-value">18,452,091</h4>
+            </div>
+            <div class="mini-card">
+                <p class="data-label">Chain ID</p>
+                <h4 class="data-value">1</h4>
+            </div>
+            <div class="mini-card">
+                <p class="data-label">Total Balance</p>
+                <h4 class="data-value" style="color: #a78bfa;">$1,234,567,890</h4>
+            </div>
+        </section>
+
+        <section style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem;">
+            <!-- Cryptographic Hashes -->
+            <div class="premium-card">
+                <h2 style="font-size: 1.8rem; font-family: 'Outfit'; margin-bottom: 2.5rem; color: var(--text-primary);">Cryptographic Hashes</h2>
+                
+                <div class="hash-box">
+                    <p class="label">Merkle Root</p>
+                    <p class="value">0x8f2c3b4a5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2</p>
+                </div>
+                <div class="hash-box" style="margin-bottom: 0;">
+                    <p class="label">Proof Identifier ID</p>
+                    <p class="value" style="color: #60a5fa;">prf_5d4e3c2b1a09f8e7d6c5b4a390123456789abcde</p>
+                </div>
+            </div>
+
+            <!-- Proof Timeline -->
+            <div class="premium-card">
+                <h2 style="font-size: 1.8rem; font-family: 'Outfit'; margin-bottom: 2.5rem; color: var(--text-primary);">Proof Timeline</h2>
+                
+                <div style="display: flex; flex-direction: column;">
+                    <div class="timeline-step">
+                        <div class="timeline-node" style="background: var(--accent); box-shadow: 0 0 15px var(--accent);">
+                            <div class="timeline-line" style="background: linear-gradient(to bottom, var(--accent), #60a5fa);"></div>
+                        </div>
+                        <div class="timeline-content">
+                            <p class="title">Generated</p>
+                            <p class="desc">Mar 25, 2026<br>08:00 AM UTC</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-step">
+                        <div class="timeline-node" style="background: #60a5fa; box-shadow: 0 0 15px #60a5fa;">
+                            <div class="timeline-line" style="background: linear-gradient(to bottom, #60a5fa, rgba(255,255,255,0.1));"></div>
+                        </div>
+                        <div class="timeline-content">
+                            <p class="title">Expires</p>
+                            <p class="desc">Mar 28, 2026<br>08:00 AM UTC</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-step">
+                        <div class="timeline-node" style="background: rgba(255,255,255,0.2);"></div>
+                        <div class="timeline-content">
+                            <p class="title">Proof Age</p>
+                            <p class="desc">2 days, 14 hours old</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script src="script.js?v=1774634684703"></script>
+</body>
+</html>
