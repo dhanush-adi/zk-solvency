@@ -11,12 +11,16 @@ export interface ProverJob {
   totalAssets: bigint;
   totalLiabilities: bigint;
   nullifierSetRoot: string;
+  cycleId?: bigint;
+  nullifierCount?: bigint;
   proof?: string;
   publicInputs?: {
     merkleRoot: string;
     totalAssets: string;
     totalLiabilities: string;
     nullifierSetRoot: string;
+    cycleId?: string;
+    nullifierCount?: string;
   };
   error?: string;
 }

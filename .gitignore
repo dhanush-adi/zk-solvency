@@ -24,3 +24,16 @@ Thumbs.db
 proofs/
 circuit_output/
 *.pdb
+
+# Cairo build artifacts (keep contract_class.json for ABI)
+cairo/target/dev/incremental/
+cairo/target/dev/*.test.*
+
+# Rust/SP1 circuit build
+circuits/solvency/target/
+circuits/solvency/input.json
+circuits/solvency/output.json
+
+# Auto-generated deployments (keep in prod, gitignore locally)
+# deployments/SolvencyVerifier.json
+# deployments/ProofRegistry.json

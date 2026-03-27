@@ -43,10 +43,13 @@ router.get('/latest-proof', asyncHandler(async (_req: Request, res: Response) =>
     createdAt: latestRound.createdAt,
     verifiedAt: latestRound.verifiedAt,
     onChain: onChainProof ? {
+      cycleId: onChainProof.cycleId.toString(),
       merkleRoot: onChainProof.merkleRoot,
       totalAssets: onChainProof.totalAssets.toString(),
       totalLiabilities: onChainProof.totalLiabilities.toString(),
+      nullifierCount: onChainProof.nullifierCount.toString(),
       timestamp: onChainProof.timestamp,
+      verified: onChainProof.verified,
     } : null,
   });
 }));

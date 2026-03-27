@@ -1,0 +1,23 @@
+{
+  "name": "zk-solvency-layer3-4",
+  "version": "1.0.0",
+  "description": "Layer 3 (Merkle Tree) + Layer 4 (Nullifier Registry) for ZK Solvency",
+  "type": "module",
+  "scripts": {
+    "test": "mocha test/**/*.test.js --timeout 10000",
+    "deploy": "node scripts/deploy.js",
+    "submit": "node scripts/submit.js"
+  },
+  "dependencies": {
+    "ethers": "^6.12.1",
+    "merkletreejs": "^0.4.0",
+    "starknet": "^6.17.0"
+  },
+  "devDependencies": {
+    "chai": "^5.1.1",
+    "mocha": "^10.7.3"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

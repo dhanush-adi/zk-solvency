@@ -1,0 +1,19 @@
+[package]
+name = "zk_solvency_layer4"
+version = "0.1.0"
+edition = "2024_07"
+cairo-version = "2.16.1"
+
+[dependencies]
+starknet = "2.16.1"
+openzeppelin_access = "3.0.0"
+
+[[target.starknet-contract]]
+sierra = true
+casm = true
+
+[dev-dependencies]
+snforge_std = "0.58.0"
+
+[scripts]
+test = "snforge test"

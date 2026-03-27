@@ -10,6 +10,7 @@ router.get('/', async (_req: Request, res: Response) => {
   try {
     const start = Date.now();
     const redis = getRedisClient();
+    if (!redis) throw new Error('Redis client not initialized');
     await redis.ping();
     checks.redis = { status: 'healthy', latency: Date.now() - start };
   } catch (err) {

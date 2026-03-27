@@ -7,7 +7,7 @@ import { eq, desc } from 'drizzle-orm';
 import { buildTree, saveMerkleNodes, getRoot } from './merkleService.js';
 import { generateNullifier, registerNullifiers } from './nullifierService.js';
 import { submitJob, waitForProof, ProverJob } from './proverService.js';
-import { appendToProofChain } from './chainService.js';
+import { submitProofToChain, getNullifierRegistryState } from './chainService.js';
 import { getAccountsByExchange } from './attestationService.js';
 import { createHash } from 'crypto';
 import Pino from 'pino';
@@ -30,9 +30,10 @@ let worker: Worker | null = null;
 
 export async function initProofScheduler(): Promise<void> {
   const redis = getRedisClient();
+  if (!redis) throw new Error('Redis client not initialized');
   
   queue = new Queue('proof-rounds', {
-    connection: redis,
+    connection: redis as any,
     defaultJobOptions: {
       attempts: 3,
       backoff: {
@@ -45,7 +46,7 @@ export async function initProofScheduler(): Promise<void> {
   worker = new Worker('proof-rounds', async (job: Job) => {
     return await processProofRound(job.data);
   }, {
-    connection: redis,
+    connection: redis as any,
     concurrency: 1,
   });
   
@@ -210,14 +211,21 @@ export async function processProofRound(data: ProofJobData): Promise<{
 async function submitChainProof(
   _roundId: string,
   merkleRoot: string,
-  previousRoundHash: string,
+  _previousRoundHash: string,
   proverJob: ProverJob
 ): Promise<string> {
   try {
-    const txHash = await appendToProofChain(
-      previousRoundHash,
+    const cycleId = proverJob.cycleId ?? 0n;
+    const nullifierCount = proverJob.nullifierCount ?? 0n;
+    const proofData = proverJob.proof ? [proverJob.proof] : ['0x00'];
+
+    const txHash = await submitProofToChain(
+      cycleId,
       merkleRoot,
-      proverJob.proof || '0x00'
+      proverJob.totalAssets,
+      proverJob.totalLiabilities,
+      nullifierCount,
+      proofData,
     );
     return txHash;
   } catch (err) {
