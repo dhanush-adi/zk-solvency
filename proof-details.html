@@ -1,183 +1,184 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Proof Details | ZK-Solvency</title>
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Icons -->
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <link rel="stylesheet" href="style.css?v=1774675269817">
-    <style>
-        .premium-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 3rem; backdrop-filter: blur(12px); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); display: flex; flex-direction: column; }
-        .mini-card { background: var(--card-inner-bg); border: 1px solid rgba(255, 255, 255, 0.03); border-radius: 12px; padding: 1.5rem 2rem; display: flex; flex-direction: column; justify-content: center; transition: all 0.2s; }
-        .mini-card:hover { border-color: rgba(255,255,255,0.08); background: var(--card-inner-bg); }
-        .data-label { color: var(--text-secondary); font-size: 0.85rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; }
-        .data-value { font-family: monospace; font-size: 1.8rem; color: #60a5fa; }
-        .hash-box { background: var(--card-inner-bg); padding: 1.5rem 2rem; border-radius: 12px; border: 1px solid var(--border-color); margin-bottom: 1.5rem; }
-        .hash-box .label { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.8rem; text-transform: uppercase; font-weight: 600; letter-spacing: 0.05em; }
-        .hash-box .value { font-family: monospace; color: #a78bfa; word-break: break-all; font-size: 1.15rem; line-height: 1.5; }
-        
-        .timeline-step { display: flex; gap: 2rem; position: relative; margin-bottom: 2.5rem; }
-        .timeline-step:last-child { margin-bottom: 0; }
-        .timeline-node { width: 18px; height: 18px; border-radius: 50%; position: relative; z-index: 2; margin-top: 5px; flex-shrink: 0; }
-        .timeline-line { width: 2px; height: 100%; position: absolute; left: 8px; top: 23px; z-index: 1; }
-        .timeline-content p.title { color: var(--text-primary); font-weight: 600; font-size: 1.25rem; font-family: 'Outfit'; margin-bottom: 0.3rem; }
-        .timeline-content p.desc { color: var(--text-secondary); font-size: 0.95rem; }
-    </style>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Proof Details | ZK-Solvency</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Manrope:wght@200;400;500;700;800&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script src="https://unpkg.com/@phosphor-icons/web"></script>
+<script id="tailwind-config">
+tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      colors: {
+        "outline-variant":"#464555","on-surface-variant":"#c7c4d8","secondary":"#4edea3",
+        "tertiary":"#bdc2ff","on-primary":"#1000a9","surface":"#131318",
+        "surface-container-high":"#2a292f","surface-bright":"#39383e","on-surface":"#e4e1e9",
+        "background":"#131318","outline":"#918fa1","surface-container-highest":"#35343a",
+        "surface-container-low":"#1b1b20","secondary-container":"#00a572",
+        "primary-container":"#4b4dd8","surface-container":"#1f1f25","primary":"#c0c1ff",
+        "surface-container-lowest":"#0e0e13","tertiary-container":"#4a55be",
+        "surface-tint":"#c0c1ff"
+      },
+      fontFamily: { "headline":["Manrope"], "body":["Inter"], "label":["Inter"] },
+      borderRadius: {"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},
+    },
+  },
+}
+</script>
+<style>
+.glass-card { background: rgba(27,27,32,0.8); backdrop-filter: blur(12px); border: 1px solid rgba(70,69,85,0.2); transition: all 0.4s cubic-bezier(0.16,1,0.3,1); }
+.glass-card:hover { border-color: rgba(192,193,255,0.3); box-shadow: 0 0 30px rgba(192,193,255,0.06), 0 20px 40px rgba(0,0,0,0.3); }
+.text-gradient { background: linear-gradient(to bottom, #ffffff, #918fa1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+#wave-canvas { position: fixed; top:0; left:0; width:100vw; height:100vh; z-index:0; pointer-events:none; }
+main, nav, footer { position: relative; z-index: 1; }
+@keyframes fade-up { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:translateY(0); } }
+.animate-fade-up { animation: fade-up 0.8s ease-out both; }
+.stagger-1 { animation-delay: 0.1s; }
+.stagger-2 { animation-delay: 0.2s; }
+.stagger-3 { animation-delay: 0.3s; }
+@keyframes spin-slow { 100% { transform: rotate(360deg); } }
+</style>
 </head>
-<body>
-    <div class="bg-gradient"></div>
+<body class="bg-background text-on-surface font-body selection:bg-primary/30">
+<canvas id="wave-canvas"></canvas>
+<nav class="fixed top-0 w-full z-50 bg-[#131318]/80 backdrop-blur-xl border-b border-[#464555]/15 shadow-[0_8px_32px_rgba(79,70,229,0.06)]">
+<div class="flex justify-between items-center max-w-7xl mx-auto px-6 h-20">
+  <div class="hidden md:flex items-center gap-8 font-headline text-sm tracking-wide font-medium">
+    <a class="text-[#94a3b8] hover:text-[#c0c1ff] transition-colors" href="index.html">Home</a>
+    <a class="text-[#94a3b8] hover:text-[#c0c1ff] transition-colors" href="dashboard.html">Dashboard</a>
+    <a class="text-[#c0c1ff] border-b-2 border-[#c0c1ff] pb-1" href="proof-details.html">Proof Details</a>
+  </div>
+  <a href="index.html" class="text-xl font-bold tracking-tighter text-[#c0c1ff] font-headline flex items-center gap-2 no-underline">
+    <i class="ph-bold ph-circle-notch" style="font-size:1.4rem;"></i> ZK-SOLVENCY
+  </a>
+  <div class="hidden md:flex items-center gap-8 font-headline text-sm tracking-wide font-medium">
+    <a class="text-[#94a3b8] hover:text-[#c0c1ff] transition-colors" href="auditor.html">Auditor</a>
+    <a class="text-[#94a3b8] hover:text-[#c0c1ff] transition-colors" href="inclusion.html">Verify Inclusion</a>
+  </div>
+</div>
+</nav>
+<main class="pt-20">
+<section class="px-6 py-16">
+<div class="max-w-7xl mx-auto">
+  <header class="mb-12 flex justify-between items-end animate-fade-up">
+    <div>
+      <h1 class="text-5xl md:text-7xl font-headline font-extrabold tracking-tighter leading-[0.9] text-gradient mb-4">Proof Details</h1>
+      <p class="text-on-surface-variant text-lg max-w-xl">Granular analysis of zero-knowledge generated cryptographic proofs and underlying block state data.</p>
+    </div>
+    <div class="flex gap-3">
+      <button class="bg-surface-container border border-outline-variant/20 text-on-surface p-3 rounded-xl hover:bg-surface-container-high transition-colors"><span class="material-symbols-outlined">download</span></button>
+      <button class="bg-surface-container border border-outline-variant/20 text-on-surface p-3 rounded-xl hover:bg-surface-container-high transition-colors"><span class="material-symbols-outlined">share</span></button>
+    </div>
+  </header>
 
-    <nav class="navbar">
-        <ul class="nav-left" style="list-style: none; display: flex; gap: 2rem; margin: 0; padding: 0;">
-            <li><a href="index.html" class="nav-link" style="text-decoration:none;">Home</a></li>
-            <li><a href="dashboard.html" class="nav-link" style="text-decoration:none;">Dashboard</a></li>
-            <li><a href="proof-details.html" class="nav-link" style="text-decoration:none; color: var(--text-primary); font-weight: 600;">Proof Details</a></li>
-        </ul>
-        <div class="nav-logo">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="12" cy="12" r="10" stroke="#fff" stroke-width="2"/>
-                <path d="M16 8L8 16" stroke="#fff" stroke-width="2"/>
-            </svg>
-            <span>ZK-SOLVENCY</span>
+  <!-- Mini Stats -->
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 animate-fade-up stagger-1">
+    <div class="bg-surface-container rounded-xl p-5 border border-outline-variant/5">
+      <p class="text-[0.625rem] font-bold tracking-widest text-outline uppercase mb-2">Status</p>
+      <span class="inline-flex items-center gap-1.5 bg-secondary/15 border border-secondary/30 text-secondary px-3 py-1.5 rounded-full text-xs font-bold"><span class="material-symbols-outlined text-xs">check</span> Verified</span>
+    </div>
+    <div class="bg-surface-container rounded-xl p-5 border border-outline-variant/5">
+      <p class="text-[0.625rem] font-bold tracking-widest text-outline uppercase mb-2">Block Height</p>
+      <h4 class="font-mono text-2xl text-primary font-bold">18,452,091</h4>
+    </div>
+    <div class="bg-surface-container rounded-xl p-5 border border-outline-variant/5">
+      <p class="text-[0.625rem] font-bold tracking-widest text-outline uppercase mb-2">Chain ID</p>
+      <h4 class="font-mono text-2xl text-primary font-bold">1</h4>
+    </div>
+    <div class="bg-surface-container rounded-xl p-5 border border-outline-variant/5">
+      <p class="text-[0.625rem] font-bold tracking-widest text-outline uppercase mb-2">Total Balance</p>
+      <h4 class="font-mono text-2xl text-tertiary font-bold">$1,234,567,890</h4>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-fade-up stagger-2">
+    <!-- Hashes (2/3 width) -->
+    <div class="lg:col-span-2 glass-card rounded-2xl p-10">
+      <h2 class="text-2xl font-headline font-bold mb-8">Cryptographic Hashes</h2>
+      <div class="bg-surface-container-lowest border border-outline-variant/10 rounded-xl p-5 mb-4">
+        <p class="text-[0.6875rem] font-bold tracking-widest text-outline uppercase mb-2">Merkle Root</p>
+        <p class="font-mono text-primary text-sm break-all leading-relaxed">0x8f2c3b4a5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2</p>
+      </div>
+      <div class="bg-surface-container-lowest border border-outline-variant/10 rounded-xl p-5">
+        <p class="text-[0.6875rem] font-bold tracking-widest text-outline uppercase mb-2">Proof Identifier ID</p>
+        <p class="font-mono text-tertiary text-sm break-all leading-relaxed">prf_5d4e3c2b1a09f8e7d6c5b4a390123456789abcde</p>
+      </div>
+    </div>
+
+    <!-- Timeline (1/3 width) -->
+    <div class="glass-card rounded-2xl p-10">
+      <h2 class="text-2xl font-headline font-bold mb-8">Proof Timeline</h2>
+      <div class="flex flex-col gap-8">
+        <div class="flex gap-4 items-start relative">
+          <div class="flex flex-col items-center">
+            <div class="w-4 h-4 rounded-full bg-primary shadow-[0_0_15px_rgba(192,193,255,0.5)]"></div>
+            <div class="w-0.5 h-16 bg-gradient-to-b from-primary to-tertiary mt-1"></div>
+          </div>
+          <div>
+            <p class="font-headline font-bold text-base">Generated</p>
+            <p class="text-sm text-outline">Mar 25, 2026<br/>08:00 AM UTC</p>
+          </div>
         </div>
-        <div class="nav-right" style="display: flex; gap: 2rem; align-items: center;">
-            <a href="auditor.html" class="nav-link" style="text-decoration: none;">Auditor</a>
-            <a href="inclusion.html" class="nav-link" style="text-decoration: none;">Verify Inclusion</a>
+        <div class="flex gap-4 items-start relative">
+          <div class="flex flex-col items-center">
+            <div class="w-4 h-4 rounded-full bg-tertiary shadow-[0_0_15px_rgba(189,194,255,0.5)]"></div>
+            <div class="w-0.5 h-16 bg-gradient-to-b from-tertiary to-outline-variant/20 mt-1"></div>
+          </div>
+          <div>
+            <p class="font-headline font-bold text-base">Expires</p>
+            <p class="text-sm text-outline">Mar 28, 2026<br/>08:00 AM UTC</p>
+          </div>
         </div>
-    </nav>
-
-    <main class="page-container" style="max-width: 1200px; margin: 0 auto; padding: 8rem 2rem 4rem; position: relative; z-index: 2;">
-        
-        <header style="margin-bottom: 4rem; display: flex; justify-content: space-between; align-items: flex-end;">
-            <div>
-                <h1 style="font-size: 3.5rem; font-family: 'Outfit', sans-serif; font-weight: 700; margin-bottom: 1rem; color: var(--text-primary); letter-spacing: -0.02em;">Proof Details</h1>
-                <p style="color: var(--text-secondary); font-size: 1.15rem; max-width: 600px; line-height: 1.6;">Granular analysis of zero-knowledge generated cryptographic proofs and underlying block state data.</p>
-            </div>
-            <div style="display: flex; gap: 1rem;">
-                <button style="background: var(--border-color); border: 1px solid rgba(255,255,255,0.1); color: var(--text-primary); padding: 1rem; border-radius: 12px; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='var(--border-color)'"><i class="ph-bold ph-download-simple" style="font-size: 1.6rem;"></i></button>
-                <button style="background: var(--border-color); border: 1px solid rgba(255,255,255,0.1); color: var(--text-primary); padding: 1rem; border-radius: 12px; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='var(--border-color)'"><i class="ph-bold ph-share-network" style="font-size: 1.6rem;"></i></button>
-            </div>
-        </header>
-
-        <section style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-bottom: 3rem;">
-            <!-- Mini Cards -->
-            <div class="mini-card">
-                <p class="data-label">Status</p>
-                <div>
-                    <span style="background: rgba(16, 185, 129, 0.15); color: #10b981; padding: 0.4rem 1rem; border-radius: 20px; font-size: 0.9rem; font-weight: 600; border: 1px solid rgba(16, 185, 129, 0.3); display: inline-flex; align-items: center; gap: 0.4rem;"><i class="ph-bold ph-check"></i> Verified</span>
-                </div>
-            </div>
-            <div class="mini-card">
-                <p class="data-label">Block Height</p>
-                <h4 class="data-value">18,452,091</h4>
-            </div>
-            <div class="mini-card">
-                <p class="data-label">Chain ID</p>
-                <h4 class="data-value">1</h4>
-            </div>
-            <div class="mini-card">
-                <p class="data-label">Total Balance</p>
-                <h4 class="data-value" style="color: #a78bfa;">$1,234,567,890</h4>
-            </div>
-        </section>
-
-        <section style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem;">
-            <!-- Cryptographic Hashes -->
-            <div class="premium-card">
-                <h2 style="font-size: 1.8rem; font-family: 'Outfit'; margin-bottom: 2.5rem; color: var(--text-primary);">Cryptographic Hashes</h2>
-                
-                <div class="hash-box">
-                    <p class="label">Merkle Root</p>
-                    <p class="value">0x8f2c3b4a5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2</p>
-                </div>
-                <div class="hash-box" style="margin-bottom: 0;">
-                    <p class="label">Proof Identifier ID</p>
-                    <p class="value" style="color: #60a5fa;">prf_5d4e3c2b1a09f8e7d6c5b4a390123456789abcde</p>
-                </div>
-            </div>
-
-            <!-- Proof Timeline -->
-            <div class="premium-card">
-                <h2 style="font-size: 1.8rem; font-family: 'Outfit'; margin-bottom: 2.5rem; color: var(--text-primary);">Proof Timeline</h2>
-                
-                <div style="display: flex; flex-direction: column;">
-                    <div class="timeline-step">
-                        <div class="timeline-node" style="background: var(--accent); box-shadow: 0 0 15px var(--accent);">
-                            <div class="timeline-line" style="background: linear-gradient(to bottom, var(--accent), #60a5fa);"></div>
-                        </div>
-                        <div class="timeline-content">
-                            <p class="title">Generated</p>
-                            <p class="desc">Mar 25, 2026<br>08:00 AM UTC</p>
-                        </div>
-                    </div>
-                    
-                    <div class="timeline-step">
-                        <div class="timeline-node" style="background: #60a5fa; box-shadow: 0 0 15px #60a5fa;">
-                            <div class="timeline-line" style="background: linear-gradient(to bottom, #60a5fa, rgba(255,255,255,0.1));"></div>
-                        </div>
-                        <div class="timeline-content">
-                            <p class="title">Expires</p>
-                            <p class="desc">Mar 28, 2026<br>08:00 AM UTC</p>
-                        </div>
-                    </div>
-                    
-                    <div class="timeline-step">
-                        <div class="timeline-node" style="background: rgba(255,255,255,0.2);"></div>
-                        <div class="timeline-content">
-                            <p class="title">Proof Age</p>
-                            <p class="desc">2 days, 14 hours old</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-    </main>
-    <!-- Footer -->
-    <footer style="border-top: 1px solid var(--border-color); padding: 4rem 2rem 2rem; position: relative; z-index: 2; background: var(--card-inner-bg);">
-        <div style="max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 4rem; margin-bottom: 4rem;">
-            <div style="grid-column: span 2;">
-                <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 1.5rem; font-weight: 700; color: var(--text-primary); margin-bottom: 1.5rem;">
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="12" cy="12" r="10" stroke="#fff" stroke-width="2"/>
-                        <path d="M16 8L8 16" stroke="#fff" stroke-width="2"/>
-                    </svg>
-                    ZK-SOLVENCY
-                </div>
-                <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.6; max-width: 300px;">Setting the universal standard for institutional transparency. Zero-knowledge cryptographic proofs of reserves.</p>
-            </div>
-            <div>
-                <h4 style="color: var(--text-primary); font-family: 'Outfit'; margin-bottom: 1.5rem; font-size: 1.1rem;">Platform</h4>
-                <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.8rem;">
-                    <li><a href="dashboard.html" style="color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; transition: color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--text-secondary)'">Dashboard</a></li>
-                    <li><a href="auditor.html" style="color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; transition: color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--text-secondary)'">Auditor Gateway</a></li>
-                    <li><a href="inclusion.html" style="color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; transition: color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--text-secondary)'">Inclusion Checker</a></li>
-                    <li><a href="proof-details.html" style="color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; transition: color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--text-secondary)'">Proof Details Grid</a></li>
-                </ul>
-            </div>
-            <div>
-                <h4 style="color: var(--text-primary); font-family: 'Outfit'; margin-bottom: 1.5rem; font-size: 1.1rem;">Resources</h4>
-                <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.8rem;">
-                    <li><a href="#" style="color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; transition: color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--text-secondary)'">Whitepaper</a></li>
-                    <li><a href="#" style="color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; transition: color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--text-secondary)'">Documentation</a></li>
-                    <li><a href="#" style="color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; transition: color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--text-secondary)'">Github Repo</a></li>
-                </ul>
-            </div>
+        <div class="flex gap-4 items-start">
+          <div class="w-4 h-4 rounded-full bg-outline-variant/30 mt-0.5"></div>
+          <div>
+            <p class="font-headline font-bold text-base">Proof Age</p>
+            <p class="text-sm text-outline">2 days, 14 hours old</p>
+          </div>
         </div>
-        <div style="max-width: 1200px; margin: 0 auto; text-align: center; border-top: 1px solid var(--border-color); padding-top: 2rem;">
-            <p style="color: var(--text-secondary); font-size: 0.85rem;">&copy; 2026 ZK-Solvency Inc. All rights reserved.</p>
-        </div>
-    </footer>
-
-
-
-    <script src="script.js?v=1774675269817"></script>
-</body>
-</html>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+</main>
+<footer class="bg-[#0e0e13] w-full py-12 border-t border-transparent relative z-10">
+<div class="bg-gradient-to-r from-transparent via-[#464555]/20 to-transparent h-[1px] w-full mb-12"></div>
+<div class="max-w-7xl mx-auto px-8 flex flex-col md:flex-row justify-between items-start gap-8">
+  <div class="flex flex-col gap-4">
+    <div class="text-lg font-black text-[#c0c1ff] font-headline flex items-center gap-2">
+      <i class="ph-bold ph-circle-notch"></i> ZK-SOLVENCY
+    </div>
+    <p class="text-sm text-[#918fa1] max-w-xs">Setting the universal standard for institutional transparency. Zero-knowledge cryptographic proofs of reserves.</p>
+    <div class="font-body text-xs uppercase tracking-widest text-[#464555] mt-4">&copy; 2026 ZK-Solvency Inc. All rights reserved.</div>
+  </div>
+  <div class="flex gap-16">
+    <div class="flex flex-col gap-3">
+      <span class="text-[10px] font-bold text-outline tracking-[0.2em] uppercase mb-1">Platform</span>
+      <a class="text-xs text-[#918fa1] hover:text-[#4edea3] transition-colors no-underline" href="dashboard.html">Dashboard</a>
+      <a class="text-xs text-[#918fa1] hover:text-[#4edea3] transition-colors no-underline" href="auditor.html">Auditor Gateway</a>
+      <a class="text-xs text-[#918fa1] hover:text-[#4edea3] transition-colors no-underline" href="inclusion.html">Inclusion Checker</a>
+      <a class="text-xs text-[#918fa1] hover:text-[#4edea3] transition-colors no-underline" href="proof-details.html">Proof Details Grid</a>
+    </div>
+    <div class="flex flex-col gap-3">
+      <span class="text-[10px] font-bold text-outline tracking-[0.2em] uppercase mb-1">Resources</span>
+      <a class="text-xs text-[#918fa1] hover:text-[#4edea3] transition-colors no-underline" href="#">Whitepaper</a>
+      <a class="text-xs text-[#918fa1] hover:text-[#4edea3] transition-colors no-underline" href="#">Documentation</a>
+      <a class="text-xs text-[#918fa1] hover:text-[#4edea3] transition-colors no-underline" href="#">Github Repo</a>
+    </div>
+  </div>
+</div>
+</footer>
+<script>
+(function(){
+  const c=document.getElementById('wave-canvas'),x=c.getContext('2d');
+  function r(){c.width=window.innerWidth;c.height=window.innerHeight;} r();
+  window.addEventListener('resize',r);
+  const w=[{a:30,wl:900,s:0.0004,y:0.35,o:0.04},{a:20,wl:700,s:0.0003,y:0.40,o:0.03},{a:25,wl:1100,s:0.00025,y:0.45,o:0.035},{a:15,wl:600,s:0.00035,y:0.50,o:0.025},{a:22,wl:800,s:0.00045,y:0.55,o:0.03}];
+  function d(t){x.clearRect(0,0,c.width,c.height);for(const v of w){x.beginPath();x.strokeStyle='rgba(255,255,255,'+v.o+')';x.lineWidth=1;const b=c.height*v.y;for(let i=0;i<=c.width;i+=2){const y=b+Math.sin((i/v.wl)*2*Math.PI+t*v.s)*v.a;i===0?x.moveTo(i,y):x.lineTo(i,y);}x.stroke();}requestAnimationFrame(d);}
+  requestAnimationFrame(d);
+})();
+</script></body></html>

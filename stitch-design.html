@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ZK-SOLVENCY | Sovereign Cryptographic Assurance</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Manrope:wght@200;400;500;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "inverse-on-surface": "#303036",
+              "on-primary-container": "#d9d8ff",
+              "on-secondary-fixed": "#002113",
+              "on-tertiary-container": "#d7d8ff",
+              "surface-container-lowest": "#0e0e13",
+              "inverse-primary": "#494bd6",
+              "outline-variant": "#464555",
+              "on-surface-variant": "#c7c4d8",
+              "secondary-fixed-dim": "#4edea3",
+              "secondary": "#4edea3",
+              "on-tertiary": "#131e8c",
+              "on-primary-fixed": "#07006c",
+              "tertiary": "#bdc2ff",
+              "on-primary": "#1000a9",
+              "surface-variant": "#35343a",
+              "on-background": "#e4e1e9",
+              "error-container": "#93000a",
+              "surface": "#131318",
+              "surface-container-high": "#2a292f",
+              "surface-bright": "#39383e",
+              "tertiary-fixed": "#e0e0ff",
+              "on-error": "#690005",
+              "on-surface": "#e4e1e9",
+              "background": "#131318",
+              "tertiary-container": "#4a55be",
+              "outline": "#918fa1",
+              "on-primary-fixed-variant": "#2f2ebe",
+              "surface-container-highest": "#35343a",
+              "surface-container-low": "#1b1b20",
+              "error": "#ffb4ab",
+              "secondary-container": "#00a572",
+              "tertiary-fixed-dim": "#bdc2ff",
+              "on-tertiary-fixed": "#000767",
+              "primary-fixed": "#e1e0ff",
+              "on-secondary-container": "#00311f",
+              "surface-tint": "#c0c1ff",
+              "on-secondary-fixed-variant": "#005236",
+              "primary-container": "#4b4dd8",
+              "surface-dim": "#131318",
+              "secondary-fixed": "#6ffbbe",
+              "on-tertiary-fixed-variant": "#2f3aa3",
+              "surface-container": "#1f1f25",
+              "inverse-surface": "#e4e1e9",
+              "primary": "#c0c1ff",
+              "on-secondary": "#003824",
+              "on-error-container": "#ffdad6",
+              "primary-fixed-dim": "#c0c1ff"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .glass-card {
+            background: rgba(27, 27, 32, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(70, 69, 85, 0.2);
+        }
+        .glass-card:hover {
+            border-color: rgba(192, 193, 255, 0.3);
+            box-shadow: 0 0 20px rgba(192, 193, 255, 0.05);
+        }
+        .text-gradient {
+            background: linear-gradient(to bottom, #ffffff, #918fa1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .pulse-secondary {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+        .sine-wave-bg {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25'%3E%3Cpath d='M0 100 Q 250 50 500 100 T 1000 100' stroke='rgba(255,255,255,0.03)' fill='transparent'/%3E%3C/svg%3E");
+            background-repeat: repeat-x;
+            background-position: center;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body selection:bg-primary/30">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-[#131318]/80 backdrop-blur-xl border-b border-[#464555]/15 shadow-[0_8px_32px_rgba(79,70,229,0.06)]">
+<div class="flex justify-between items-center max-w-7xl mx-auto px-6 h-20">
+<!-- Left Nav -->
+<div class="hidden md:flex items-center gap-8 font-manrope text-sm tracking-wide font-medium">
+<a class="text-[#c0c1ff] border-b-2 border-[#c0c1ff] pb-1" href="#">Home</a>
+<a class="text-[#94a3b8] hover:text-[#c0c1ff] transition-colors" href="#">Dashboard</a>
+<a class="text-[#94a3b8] hover:text-[#c0c1ff] transition-colors" href="#">Proof Details</a>
+</div>
+<!-- Logo -->
+<div class="text-xl font-bold tracking-tighter text-[#c0c1ff] font-headline">
+                ZK-SOLVENCY
+            </div>
+<!-- Right Nav -->
+<div class="hidden md:flex items-center gap-8 font-manrope text-sm tracking-wide font-medium">
+<a class="text-[#94a3b8] hover:text-[#c0c1ff] transition-colors" href="#">Auditor</a>
+<a class="text-[#94a3b8] hover:text-[#c0c1ff] transition-colors" href="#">Verify Inclusion</a>
+<button class="bg-gradient-to-r from-primary to-primary-container text-on-primary px-5 py-2 rounded-lg font-bold scale-95 active:scale-90 transition-transform">
+                    Get Access
+                </button>
+</div>
+</div>
+</nav>
+<main class="pt-20">
+<!-- Hero Section -->
+<section class="relative min-h-[870px] flex flex-col justify-center px-6 overflow-hidden sine-wave-bg">
+<div class="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center pt-16">
+<div class="space-y-8">
+<h1 class="text-6xl md:text-8xl font-headline font-extrabold tracking-tighter leading-[0.9] text-gradient">
+                        Zero-Knowledge<br/>Solvency.
+                    </h1>
+<div class="flex items-center gap-4">
+<button class="flex items-center gap-3 bg-gradient-to-r from-primary to-primary-container text-on-primary px-8 py-4 rounded-xl font-bold shadow-[0_0_25px_rgba(192,193,255,0.2)] hover:scale-105 transition-transform group">
+                            View Dashboard
+                            <span class="material-symbols-outlined text-lg">arrow_forward</span>
+</button>
+<div class="flex flex-col">
+<span class="text-label-sm font-bold tracking-widest text-outline uppercase">Network Status</span>
+<div class="flex items-center gap-2 text-secondary font-medium">
+<span class="w-2 h-2 rounded-full bg-secondary pulse-secondary"></span>
+                                Live Assurance Active
+                            </div>
+</div>
+</div>
+</div>
+<div class="lg:pl-12 flex flex-col justify-center">
+<p class="text-xl text-on-surface-variant font-light leading-relaxed max-w-md">
+                        Institutional-grade cryptographic verification that proves reserves without exposing sensitive counterparty data or liquidity positions.
+                    </p>
+<div class="mt-12 glass-card p-6 rounded-2xl group cursor-pointer transition-all">
+<div class="flex justify-between items-center">
+<div>
+<h3 class="text-lg font-bold font-headline">Verify Wallet Inclusion</h3>
+<p class="text-sm text-outline">Check if your assets are part of the latest proof.</p>
+</div>
+<span class="material-symbols-outlined text-primary group-hover:translate-x-2 transition-transform">trending_flat</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Stats Bar -->
+<div class="max-w-7xl mx-auto w-full mt-24">
+<div class="flex flex-wrap gap-12 py-8 border-t border-outline-variant/10">
+<div class="flex flex-col">
+<span class="text-label-sm font-bold tracking-widest text-outline uppercase mb-2">Current Solvency</span>
+<div class="flex items-center gap-3 text-3xl font-headline font-bold">
+                            112.4%
+                            <span class="w-2 h-2 rounded-full bg-secondary pulse-secondary"></span>
+</div>
+</div>
+<div class="flex flex-col">
+<span class="text-label-sm font-bold tracking-widest text-outline uppercase mb-2">Total Verified</span>
+<div class="flex items-center gap-3 text-3xl font-headline font-bold">
+                            $1.24B
+                            <span class="w-2 h-2 rounded-full bg-secondary pulse-secondary"></span>
+</div>
+</div>
+<div class="flex flex-col">
+<span class="text-label-sm font-bold tracking-widest text-outline uppercase mb-2">Active Proofs</span>
+<div class="flex items-center gap-3 text-3xl font-headline font-bold">
+                            14,802
+                        </div>
+</div>
+</div>
+</div>
+</section>
+<!-- Feature Cards Bento Grid -->
+<section class="py-24 px-6 bg-surface-container-low">
+<div class="max-w-7xl mx-auto">
+<div class="grid grid-cols-1 md:grid-cols-3 grid-rows-2 gap-6 h-auto md:h-[600px]">
+<!-- Large Card -->
+<div class="md:col-span-2 md:row-span-2 glass-card rounded-3xl p-10 flex flex-col justify-between relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-[120px]" style="font-variation-settings: 'FILL' 1;">analytics</span>
+</div>
+<div>
+<div class="inline-flex items-center gap-2 bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-bold tracking-tighter mb-6">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+                                LIVE DASHBOARD
+                            </div>
+<h2 class="text-4xl font-headline font-bold mb-4">Proof of Reserves</h2>
+<p class="text-on-surface-variant max-w-md mb-8">
+                                Real-time cryptographic mapping of institutional assets against user liabilities. Our ZK-circuits aggregate trillions in data points while maintaining 100% privacy.
+                            </p>
+<div class="grid grid-cols-2 gap-8 mb-8">
+<div>
+<div class="text-outline text-xs uppercase tracking-widest mb-1">Total Verified</div>
+<div class="text-2xl font-headline font-bold">$1.24B</div>
+</div>
+<div>
+<div class="text-outline text-xs uppercase tracking-widest mb-1">Solvency Ratio</div>
+<div class="text-2xl font-headline font-bold text-secondary">112.4%</div>
+</div>
+</div>
+</div>
+<button class="w-fit flex items-center gap-2 text-primary font-bold tracking-widest text-sm hover:gap-4 transition-all uppercase">
+                            Open Dashboard <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+<!-- Medium Card 1 -->
+<div class="glass-card rounded-3xl p-8 flex flex-col justify-between group">
+<div>
+<div class="inline-flex items-center gap-2 bg-secondary/10 text-secondary px-3 py-1 rounded-full text-xs font-bold tracking-tighter mb-6">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                                VERIFICATION BADGE
+                            </div>
+<h3 class="text-2xl font-headline font-bold mb-3">Inclusion Checker</h3>
+<p class="text-sm text-on-surface-variant leading-relaxed">
+                                Self-sovereign verification for end users to confirm their assets are included.
+                            </p>
+</div>
+<button class="w-fit flex items-center gap-2 text-secondary font-bold tracking-widest text-xs hover:gap-4 transition-all uppercase mt-6">
+                            Verify Now <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+<!-- Medium Card 2 -->
+<div class="glass-card rounded-3xl p-8 flex flex-col justify-between group">
+<div>
+<div class="inline-flex items-center gap-2 bg-tertiary/10 text-tertiary px-3 py-1 rounded-full text-xs font-bold tracking-tighter mb-6">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+                                COMPLIANCE
+                            </div>
+<h3 class="text-2xl font-headline font-bold mb-3">Auditor Terminal</h3>
+<p class="text-sm text-on-surface-variant leading-relaxed">
+                                Dedicated interface for third-party auditors to run independent verifications.
+                            </p>
+</div>
+<button class="w-fit flex items-center gap-2 text-tertiary font-bold tracking-widest text-xs hover:gap-4 transition-all uppercase mt-6">
+                            Start Audit <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Why ZK-Solvency Section -->
+<section class="py-32 px-6">
+<div class="max-w-7xl mx-auto text-center mb-20">
+<span class="text-label-sm font-bold tracking-[0.3em] text-primary uppercase block mb-4">Why Choose Us</span>
+<h2 class="text-4xl md:text-5xl font-headline font-bold">The Gold Standard of Trust</h2>
+</div>
+<div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- Metric Card 1 -->
+<div class="bg-surface-container p-8 rounded-2xl border border-outline-variant/5 hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-primary text-4xl mb-6">verified_user</span>
+<h3 class="text-xl font-bold font-headline mb-2">Cryptographic Certainty</h3>
+<div class="text-5xl font-extrabold font-headline mb-6 text-gradient">99.9%</div>
+<p class="text-on-surface-variant text-sm mb-8">Mathematical proofs eliminate the need for blind trust in centralized entities.</p>
+<div class="h-1 w-full bg-outline-variant/20 rounded-full overflow-hidden">
+<div class="h-full w-[99.9%] bg-gradient-to-r from-primary to-primary-container"></div>
+</div>
+</div>
+<!-- Metric Card 2 -->
+<div class="bg-surface-container p-8 rounded-2xl border border-outline-variant/5 hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-secondary text-4xl mb-6">lock</span>
+<h3 class="text-xl font-bold font-headline mb-2">Absolute Privacy</h3>
+<div class="text-5xl font-extrabold font-headline mb-6 text-gradient">100%</div>
+<p class="text-on-surface-variant text-sm mb-8">Zero data leakage. Your sensitive financial positions remain encrypted at all times.</p>
+<div class="h-1 w-full bg-outline-variant/20 rounded-full overflow-hidden">
+<div class="h-full w-full bg-gradient-to-r from-secondary to-secondary-container"></div>
+</div>
+</div>
+<!-- Metric Card 3 -->
+<div class="bg-surface-container p-8 rounded-2xl border border-outline-variant/5 hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-tertiary text-4xl mb-6">account_balance</span>
+<h3 class="text-xl font-bold font-headline mb-2">Institutional Grade</h3>
+<div class="text-5xl font-extrabold font-headline mb-6 text-gradient">24/7</div>
+<p class="text-on-surface-variant text-sm mb-8">Always-on solvency monitoring designed for global financial infrastructure.</p>
+<div class="h-1 w-full bg-outline-variant/20 rounded-full overflow-hidden">
+<div class="h-full w-[85%] bg-gradient-to-r from-tertiary to-tertiary-container"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- How ZK Audits Work Section -->
+<section class="py-32 px-6 bg-surface-container-lowest relative overflow-hidden">
+<div class="max-w-7xl mx-auto text-center mb-24">
+<span class="text-label-sm font-bold tracking-[0.3em] text-secondary uppercase block mb-4">The Pipeline</span>
+<h2 class="text-4xl md:text-5xl font-headline font-bold">How ZK Audits Work?</h2>
+</div>
+<div class="max-w-5xl mx-auto relative">
+<!-- Connector Line -->
+<div class="hidden lg:block absolute top-1/2 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-outline-variant/30 to-transparent -translate-y-1/2"></div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-12 relative z-10">
+<!-- Step 1 -->
+<div class="glass-card p-8 rounded-2xl text-center group">
+<div class="w-12 h-12 bg-surface-bright rounded-full flex items-center justify-center mx-auto mb-6 border border-outline-variant/20 font-bold text-primary">01</div>
+<span class="material-symbols-outlined text-4xl text-on-surface-variant mb-4" style="font-variation-settings: 'FILL' 1;">input</span>
+<h4 class="text-lg font-bold font-headline mb-2">Data Ingestion</h4>
+<p class="text-sm text-outline">Encrypted snapshots of account balances and cold-wallet addresses are collected.</p>
+</div>
+<!-- Step 2 -->
+<div class="glass-card p-8 rounded-2xl text-center group scale-105 border-primary/20 shadow-xl shadow-primary/5">
+<div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center mx-auto mb-6 font-bold text-on-primary">02</div>
+<span class="material-symbols-outlined text-4xl text-primary mb-4" style="font-variation-settings: 'FILL' 1;">settings_b_roll</span>
+<h4 class="text-lg font-bold font-headline mb-2">Circuit Generation</h4>
+<p class="text-sm text-on-surface-variant">Merkle Sum Tree circuits generate a zero-knowledge proof of total solvency.</p>
+</div>
+<!-- Step 3 -->
+<div class="glass-card p-8 rounded-2xl text-center group">
+<div class="w-12 h-12 bg-surface-bright rounded-full flex items-center justify-center mx-auto mb-6 border border-outline-variant/20 font-bold text-secondary">03</div>
+<span class="material-symbols-outlined text-4xl text-on-surface-variant mb-4" style="font-variation-settings: 'FILL' 1;">cloud_upload</span>
+<h4 class="text-lg font-bold font-headline mb-2">On-Chain Publication</h4>
+<p class="text-sm text-outline">The succinct proof is verified and published to a public blockchain ledger.</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-[#0e0e13] w-full py-12 border-t border-transparent">
+<div class="bg-gradient-to-r from-transparent via-[#464555]/20 to-transparent h-[1px] w-full mb-12"></div>
+<div class="max-w-7xl mx-auto px-8 flex flex-col md:flex-row justify-between items-center gap-8">
+<div class="flex flex-col gap-4">
+<div class="text-lg font-black text-[#c0c1ff] font-headline">ZK-SOLVENCY</div>
+<div class="font-inter text-xs uppercase tracking-widest text-[#464555]">
+                    © 2024 ZK-Solvency. Sovereign Cryptographic Assurance.
+                </div>
+</div>
+<div class="flex gap-12">
+<div class="flex flex-col gap-3">
+<span class="text-[10px] font-bold text-outline tracking-[0.2em] uppercase mb-1">Platform</span>
+<a class="text-xs text-[#464555] hover:text-[#4edea3] transition-colors duration-200" href="#">Dashboard</a>
+<a class="text-xs text-[#464555] hover:text-[#4edea3] transition-colors duration-200" href="#">Documentation</a>
+<a class="text-xs text-[#464555] hover:text-[#4edea3] transition-colors duration-200" href="#">GitHub</a>
+</div>
+<div class="flex flex-col gap-3">
+<span class="text-[10px] font-bold text-outline tracking-[0.2em] uppercase mb-1">Legal</span>
+<a class="text-xs text-[#464555] hover:text-[#4edea3] transition-colors duration-200" href="#">Privacy Policy</a>
+<a class="text-xs text-[#464555] hover:text-[#4edea3] transition-colors duration-200" href="#">Terms of Service</a>
+<a class="text-xs text-[#464555] hover:text-[#4edea3] transition-colors duration-200" href="#">Security Audit</a>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<a class="opacity-80 hover:opacity-100 transition-opacity" href="#">
+<img alt="X" class="w-5 h-5" data-alt="minimalist X social media icon in dark gray" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAEnTLtECqUjc2ORSOyGJyJrBca8FIeEf-6tMoStimauXrfgUzzzLkqwZTQoAo72SuibfMBb6_qUQoO1JvIN9FWZ3VryufEhumbsN1Di42KLQJS55-6ZMpZKKHbLDg2EOIu8WcAWcZwSrGtB_YLk5ILtWV0n9oXC4Nh_owAetspqngPcG_cl-Y6XlG_F7ZQCAckbcl9aac6j3CL3bKupkzIutBqeIpuGrscJrTzAIqTHjsnDB0vGJXMJdfyxN2JGKNvqGmXLeG-pAM"/>
+</a>
+<a class="opacity-80 hover:opacity-100 transition-opacity" href="#">
+<img alt="GitHub" class="w-5 h-5" data-alt="minimalist GitHub icon in dark gray" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBFEP7Q0Ia0D5e0ikruwi6xA5YunMb4ujpdgjSNV7gTCj2N7oGCVnn6sh8boVvgT6K-Op1s9CEvZPO72Prh9iQVK_tGVZjf3le7TdEhX6jhgz-YJDQNI7j2DDxMMo8lbknOxCga4OeH47vTe-prgs-zKE7Jd_3g2bOYe5B7KBVtwvBeOWy6vbc7r_GekgtF6_IBTLWfznjv5qF3qFlrDyESlgpHZBYalcxNglcOwQ1i6M6_AJ833sr3K0qpDBoNF0gqkdY_CbdLtSE"/>
+</a>
+</div>
+</div>
+</footer>
+</body></html>
