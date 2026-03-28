@@ -18,7 +18,7 @@ pub mod ProofRegistry {
     };
     use openzeppelin_access::ownable::OwnableComponent;
     use super::super::interfaces::{
-        IProofRegistry,
+        IProofRegistry, ProofRecord,
         INullifierRegistryDispatcher, INullifierRegistryDispatcherTrait,
         IVerifierDispatcher, IVerifierDispatcherTrait,
     };
@@ -51,6 +51,7 @@ pub mod ProofRegistry {
         proof_total_liabilities_high: Map<u64, u128>,
         proof_nullifier_count: Map<u64, u64>,
         proof_timestamp: Map<u64, u64>,
+        proof_previous_cycle_id: Map<u64, u64>,
         proof_verified: Map<u64, bool>,
     }
 
@@ -162,9 +163,10 @@ pub mod ProofRegistry {
             self.proof_total_liabilities_high.write(cycle_id, total_liabilities.high);
             self.proof_nullifier_count.write(cycle_id, nullifier_count);
             self.proof_timestamp.write(cycle_id, timestamp);
+            self.proof_previous_cycle_id.write(cycle_id, current_latest);
             self.proof_verified.write(cycle_id, true);
 
-            // ── Update cycle chain ──────────────────────────────────
+            // ── Update cycle chain (global latest track) ────────────────
             self.previous_cycle_id.write(current_latest);
             self.latest_cycle_id.write(cycle_id);
 
@@ -190,30 +192,31 @@ pub mod ProofRegistry {
         fn get_proof(
             self: @ContractState,
             cycle_id: u64,
-        ) -> (u64, felt252, u256, u256, u64, u64, bool) {
-            let merkle_root = self.proof_merkle_root.read(cycle_id);
-            let total_assets = u256 {
-                low: self.proof_total_assets_low.read(cycle_id),
-                high: self.proof_total_assets_high.read(cycle_id),
-            };
-            let total_liabilities = u256 {
-                low: self.proof_total_liabilities_low.read(cycle_id),
-                high: self.proof_total_liabilities_high.read(cycle_id),
-            };
-            let nullifier_count = self.proof_nullifier_count.read(cycle_id);
-            let timestamp = self.proof_timestamp.read(cycle_id);
-            let verified = self.proof_verified.read(cycle_id);
-
-            (cycle_id, merkle_root, total_assets, total_liabilities,
-             nullifier_count, timestamp, verified)
+        ) -> ProofRecord {
+            ProofRecord {
+                cycle_id,
+                merkle_root: self.proof_merkle_root.read(cycle_id),
+                total_assets: u256 {
+                    low: self.proof_total_assets_low.read(cycle_id),
+                    high: self.proof_total_assets_high.read(cycle_id),
+                },
+                total_liabilities: u256 {
+                    low: self.proof_total_liabilities_low.read(cycle_id),
+                    high: self.proof_total_liabilities_high.read(cycle_id),
+                },
+                nullifier_count: self.proof_nullifier_count.read(cycle_id),
+                timestamp: self.proof_timestamp.read(cycle_id),
+                previous_cycle_id: self.proof_previous_cycle_id.read(cycle_id),
+                verified: self.proof_verified.read(cycle_id),
+            }
         }
 
         fn get_latest_cycle_id(self: @ContractState) -> u64 {
             self.latest_cycle_id.read()
         }
 
-        fn get_previous_cycle_id(self: @ContractState) -> u64 {
-            self.previous_cycle_id.read()
+        fn get_previous_cycle_id(self: @ContractState, cycle_id: u64) -> u64 {
+            self.proof_previous_cycle_id.read(cycle_id)
         }
 
         fn is_solvent(self: @ContractState) -> bool {

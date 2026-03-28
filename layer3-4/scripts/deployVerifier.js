@@ -118,15 +118,20 @@ async function deployContract(account, provider, contractName, constructorArgs) 
   const casm = json.parse(fs.readFileSync(casmPath, 'utf-8'));
 
   console.log('   📜 Declaring contract class...');
-  const declareResponse = await account.declare({ contract: sierra, casm });
+  const nonce = await account.getNonce('latest');
+  const declareResponse = await account.declare(
+    { contract: sierra, casm },
+    { nonce, version: 2, skipValidate: true }
+  );
   console.log('   Class hash:', declareResponse.class_hash);
   await provider.waitForTransaction(declareResponse.transaction_hash);
 
   console.log('   🚀 Deploying instance...');
+  const deployNonce = await account.getNonce('latest');
   const deployResponse = await account.deployContract({
     classHash: declareResponse.class_hash,
     constructorCalldata: constructorArgs,
-  });
+  }, { nonce: deployNonce, version: 1, skipValidate: true });
   await provider.waitForTransaction(deployResponse.transaction_hash);
 
   return deployResponse.contract_address;

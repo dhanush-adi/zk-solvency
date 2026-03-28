@@ -53,6 +53,19 @@ pub trait IVerifier<TContractState> {
     ) -> bool;
 }
 
+/// ProofRecord struct for Layer 7+ queries.
+#[derive(Copy, Drop, Serde, starknet::Store)]
+pub struct ProofRecord {
+    pub cycle_id: u64,
+    pub merkle_root: felt252,
+    pub total_assets: u256,
+    pub total_liabilities: u256,
+    pub nullifier_count: u64,
+    pub timestamp: u64,
+    pub previous_cycle_id: u64,
+    pub verified: bool,
+}
+
 /// ──────────────────────────────────────────────────────────────────────────
 /// IProofRegistry — Layer 6 registry interface (Layer 7+ query API)
 /// ──────────────────────────────────────────────────────────────────────────
@@ -73,18 +86,16 @@ pub trait IProofRegistry<TContractState> {
     );
 
     /// Get proof record for a specific cycle.
-    /// Returns (cycle_id, merkle_root, total_assets, total_liabilities,
-    ///          nullifier_count, timestamp, verified).
     fn get_proof(
         self: @TContractState,
         cycle_id: u64,
-    ) -> (u64, felt252, u256, u256, u64, u64, bool);
+    ) -> ProofRecord;
 
     /// Get the latest submitted cycle ID.
     fn get_latest_cycle_id(self: @TContractState) -> u64;
 
-    /// Get the previous cycle ID (for Layer 7 chain traversal).
-    fn get_previous_cycle_id(self: @TContractState) -> u64;
+    /// Get the previous cycle ID linked to a specific cycle.
+    fn get_previous_cycle_id(self: @TContractState, cycle_id: u64) -> u64;
 
     /// Check if the exchange is currently solvent based on latest proof.
     fn is_solvent(self: @TContractState) -> bool;

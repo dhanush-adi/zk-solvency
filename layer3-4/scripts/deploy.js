@@ -1,20 +1,8 @@
 /**
- * deploy.js — Deploy NullifierRegistry to StarkNet
- *
- * Usage:
- *   node scripts/deploy.js
- *
- * Requires:
- *   - STARKNET_RPC_URL in .env (defaults to local devnet)
- *   - STARKNET_PRIVATE_KEY in .env
- *   - STARKNET_ACCOUNT_ADDRESS in .env
- *   - Compiled Sierra + CASM artifacts in cairo/target/
- *
- * Outputs:
- *   - deployments/NullifierRegistry.json with address + class hash
+ * deploy.js — Deploy NullifierRegistry using Account
  */
 
-import { RpcProvider, Account, json, Contract } from 'starknet';
+import { RpcProvider, Account, json, hash, num } from 'starknet';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -22,7 +10,6 @@ import { fileURLToPath } from 'url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '..');
 
-// ── Load environment ──────────────────────────────────────────────────
 const envPath = path.join(ROOT, '.env');
 if (fs.existsSync(envPath)) {
   const envContent = fs.readFileSync(envPath, 'utf-8');
@@ -46,12 +33,16 @@ if (!PRIVATE_KEY || !ACCOUNT_ADDRESS) {
 
 async function main() {
   console.log('🔗 Connecting to StarkNet RPC:', RPC_URL);
-  const provider = new RpcProvider({ nodeUrl: RPC_URL });
+  
+  const provider = new RpcProvider({ 
+    nodeUrl: RPC_URL,
+    blockIdentifier: 'latest'
+  });
 
-  const account = new Account(provider, ACCOUNT_ADDRESS, PRIVATE_KEY);
   console.log('👤 Deployer account:', ACCOUNT_ADDRESS);
 
-  // ── Load compiled artifacts ───────────────────────────────────────
+  const account = new Account(provider, ACCOUNT_ADDRESS, PRIVATE_KEY);
+
   const sierraPath = path.join(
     ROOT,
     'cairo/target/dev/zk_solvency_layer4_NullifierRegistry.contract_class.json'
@@ -62,52 +53,67 @@ async function main() {
   );
 
   if (!fs.existsSync(sierraPath) || !fs.existsSync(casmPath)) {
-    console.error('❌ Compiled artifacts not found. Run `scarb build` in cairo/ first.');
+    console.error('❌ Compiled artifacts not found.');
     process.exit(1);
   }
 
   const sierra = json.parse(fs.readFileSync(sierraPath, 'utf-8'));
   const casm = json.parse(fs.readFileSync(casmPath, 'utf-8'));
 
-  // ── Declare contract class ────────────────────────────────────────
-  console.log('📜 Declaring contract class...');
-  const declareResponse = await account.declare({ contract: sierra, casm });
-  console.log('   Class hash:', declareResponse.class_hash);
-  await provider.waitForTransaction(declareResponse.transaction_hash);
+  console.log('📜 Declaring contract...');
 
-  // ── Deploy contract instance ──────────────────────────────────────
-  console.log('🚀 Deploying NullifierRegistry...');
-  const deployResponse = await account.deployContract({
-    classHash: declareResponse.class_hash,
-    constructorCalldata: [ACCOUNT_ADDRESS], // owner = deployer
-  });
-  await provider.waitForTransaction(deployResponse.transaction_hash);
-
-  const contractAddress = deployResponse.contract_address;
-  console.log('✅ NullifierRegistry deployed at:', contractAddress);
-
-  // ── Save deployment info ──────────────────────────────────────────
-  const deploymentsDir = path.join(ROOT, 'deployments');
-  if (!fs.existsSync(deploymentsDir)) {
-    fs.mkdirSync(deploymentsDir, { recursive: true });
+  try {
+    // Use declare without fee estimation
+    const declareResponse = await account.declare(
+      { contract: sierra, casm },
+      { 
+        maxFee: '0x100000000',
+        nonce: '0x0'
+      }
+    );
+    
+    console.log('   Class hash:', declareResponse.class_hash);
+    console.log('   Tx:', declareResponse.transaction_hash);
+    await provider.waitForTransaction(declareResponse.transaction_hash);
+    
+    console.log('🚀 Deploying NullifierRegistry...');
+    
+    const deployResponse = await account.deploy(
+      { 
+        classHash: declareResponse.class_hash, 
+        constructorCalldata: [ACCOUNT_ADDRESS] 
+      },
+      { maxFee: '0x100000000' }
+    );
+    
+    await provider.waitForTransaction(deployResponse.transaction_hash);
+    
+    const contractAddress = deployResponse.contract_address;
+    console.log('✅ NullifierRegistry deployed at:', contractAddress);
+    
+    const deploymentsDir = path.join(ROOT, 'deployments');
+    if (!fs.existsSync(deploymentsDir)) {
+      fs.mkdirSync(deploymentsDir, { recursive: true });
+    }
+    
+    fs.writeFileSync(
+      path.join(deploymentsDir, 'NullifierRegistry.json'),
+      JSON.stringify({ 
+        contractName: 'NullifierRegistry',
+        address: contractAddress, 
+        classHash: declareResponse.class_hash,
+        deployer: ACCOUNT_ADDRESS,
+        network: RPC_URL,
+        deployedAt: new Date().toISOString()
+      }, null, 2)
+    );
+    
+    console.log('💾 Deployment info saved');
+    
+  } catch (err) {
+    console.error('❌ Error:', err.message || err);
+    process.exit(1);
   }
-
-  const deploymentInfo = {
-    contractName: 'NullifierRegistry',
-    address: contractAddress,
-    classHash: declareResponse.class_hash,
-    deployer: ACCOUNT_ADDRESS,
-    network: RPC_URL,
-    deployedAt: new Date().toISOString(),
-    sierraPath: 'cairo/target/dev/zk_solvency_layer4_NullifierRegistry.contract_class.json',
-  };
-
-  const outPath = path.join(deploymentsDir, 'NullifierRegistry.json');
-  fs.writeFileSync(outPath, JSON.stringify(deploymentInfo, null, 2));
-  console.log('💾 Deployment info saved to:', outPath);
 }
 
-main().catch((err) => {
-  console.error('❌ Deployment failed:', err);
-  process.exit(1);
-});
+main().catch(console.error);

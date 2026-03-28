@@ -1,35 +1,43 @@
 /**
- * hashLeaf.js — Isolated leaf hashing utility
+ * hashLeaf.js — Isolated leaf hashing utility for StarkNet
  *
- * Produces a keccak256 hash of (user_id, balance) using Solidity-compatible
- * packed encoding. This module is intentionally minimal so it can be imported
- * by the Layer 5 zk-STARK prover without pulling in the full Merkle module.
+ * Produces a Pedersen hash of (user_id, balance). Both inputs are
+ * converted to felt252 before hashing. user_id is encoded as a
+ * short string (max 31 chars).
  *
- * Output: 0x-prefixed hex string (bytes32)
+ * Output: 0x-prefixed hex string (felt252)
  */
 
-import { ethers } from 'ethers';
+import { hash, shortString } from 'starknet';
 
 /**
- * Hash a single (userId, balance) pair into a Merkle leaf.
+ * Hash a single (userId, balance) pair into a Merkle leaf using Pedersen.
  *
- * @param {string} userId  — unique account identifier
+ * @param {string} userId  — unique account identifier (max 31 ASCII chars)
  * @param {string|bigint} balance — uint256-compatible balance value
- * @returns {string} 0x-prefixed keccak256 hash (bytes32)
+ * @returns {string} 0x-prefixed Pedersen hash (felt252)
  */
 export function hashLeaf(userId, balance) {
   if (typeof userId !== 'string' || userId.length === 0) {
     throw new Error('userId must be a non-empty string');
   }
 
-  const bal = BigInt(balance);
-
-  if (bal < 0n) {
-    throw new Error(`Balance must be non-negative, got ${bal}`);
+  // 1. Encode userId as felt252 (short string)
+  let userIdFelt;
+  try {
+    userIdFelt = shortString.encodeShortString(userId);
+  } catch (err) {
+    throw new Error(`Failed to encode userId "${userId}": ${err.message}`);
   }
 
-  return ethers.solidityPackedKeccak256(
-    ['string', 'uint256'],
-    [userId, bal]
-  );
+  // 2. Convert balance to BigInt
+  const balanceFelt = BigInt(balance);
+
+  if (balanceFelt < 0n) {
+    throw new Error(`Balance must be non-negative, got ${balanceFelt}`);
+  }
+
+  // 3. Compute Pedersen hash
+  // Pedersen in starknet.js takes two felts
+  return hash.computePedersenHash(userIdFelt, balanceFelt);
 }
