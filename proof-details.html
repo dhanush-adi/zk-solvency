@@ -12,7 +12,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- Icons -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <link rel="stylesheet" href="style.css?v=1774635105392">
+    <link rel="stylesheet" href="style.css?v=1774675269817">
     <style>
         .premium-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 3rem; backdrop-filter: blur(12px); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); display: flex; flex-direction: column; }
         .mini-card { background: var(--card-inner-bg); border: 1px solid rgba(255, 255, 255, 0.03); border-radius: 12px; padding: 1.5rem 2rem; display: flex; flex-direction: column; justify-content: center; transition: all 0.2s; }
@@ -140,7 +140,44 @@
         </section>
 
     </main>
+    <!-- Footer -->
+    <footer style="border-top: 1px solid var(--border-color); padding: 4rem 2rem 2rem; position: relative; z-index: 2; background: var(--card-inner-bg);">
+        <div style="max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 4rem; margin-bottom: 4rem;">
+            <div style="grid-column: span 2;">
+                <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 1.5rem; font-weight: 700; color: var(--text-primary); margin-bottom: 1.5rem;">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="12" r="10" stroke="#fff" stroke-width="2"/>
+                        <path d="M16 8L8 16" stroke="#fff" stroke-width="2"/>
+                    </svg>
+                    ZK-SOLVENCY
+                </div>
+                <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.6; max-width: 300px;">Setting the universal standard for institutional transparency. Zero-knowledge cryptographic proofs of reserves.</p>
+            </div>
+            <div>
+                <h4 style="color: var(--text-primary); font-family: 'Outfit'; margin-bottom: 1.5rem; font-size: 1.1rem;">Platform</h4>
+                <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.8rem;">
+                    <li><a href="dashboard.html" style="color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; transition: color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--text-secondary)'">Dashboard</a></li>
+                    <li><a href="auditor.html" style="color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; transition: color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--text-secondary)'">Auditor Gateway</a></li>
+                    <li><a href="inclusion.html" style="color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; transition: color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--text-secondary)'">Inclusion Checker</a></li>
+                    <li><a href="proof-details.html" style="color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; transition: color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--text-secondary)'">Proof Details Grid</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 style="color: var(--text-primary); font-family: 'Outfit'; margin-bottom: 1.5rem; font-size: 1.1rem;">Resources</h4>
+                <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.8rem;">
+                    <li><a href="#" style="color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; transition: color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--text-secondary)'">Whitepaper</a></li>
+                    <li><a href="#" style="color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; transition: color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--text-secondary)'">Documentation</a></li>
+                    <li><a href="#" style="color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; transition: color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--text-secondary)'">Github Repo</a></li>
+                </ul>
+            </div>
+        </div>
+        <div style="max-width: 1200px; margin: 0 auto; text-align: center; border-top: 1px solid var(--border-color); padding-top: 2rem;">
+            <p style="color: var(--text-secondary); font-size: 0.85rem;">&copy; 2026 ZK-Solvency Inc. All rights reserved.</p>
+        </div>
+    </footer>
 
-    <script src="script.js?v=1774634684703"></script>
+
+
+    <script src="script.js?v=1774675269817"></script>
 </body>
 </html>

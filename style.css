@@ -515,3 +515,398 @@ h1, h2, h3, h4, h5, h6, .hero-title, .nav-logo, .gc-title, .step-title, .about-s
     letter-spacing: -0.03em;
 }
 
+
+
+/* =========================================
+   PREMIUM FEATURE CARDS V2
+   ========================================= */
+.premium-card {
+  background: linear-gradient(165deg, rgba(20,20,20,0.95), rgba(8,8,8,0.98));
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  padding: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  min-height: 320px;
+}
+.premium-card:hover {
+  transform: translateY(-8px);
+  border-color: rgba(255,255,255,0.12);
+  box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+}
+.pc-glow {
+  position: absolute;
+  top: -80px;
+  right: -80px;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0;
+  transition: opacity 0.5s;
+  pointer-events: none;
+}
+.premium-card:hover .pc-glow { opacity: 1; }
+.pc-glow-blue { background: rgba(59,130,246,0.25); }
+.pc-glow-green { background: rgba(16,185,129,0.25); }
+.pc-glow-purple { background: rgba(139,92,246,0.25); }
+.pc-number {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.15);
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  margin-bottom: 1.5rem;
+}
+.pc-icon-wrap {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  margin-bottom: 2rem;
+  border: 1px solid var(--border-color);
+}
+.pc-icon-blue { background: rgba(59,130,246,0.08); color: #60a5fa; }
+.pc-icon-green { background: rgba(16,185,129,0.08); color: #10b981; }
+.pc-icon-purple { background: rgba(139,92,246,0.08); color: #a78bfa; }
+.pc-title {
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
+  color: var(--text-primary);
+  margin-bottom: 0.8rem;
+  letter-spacing: -0.02em;
+}
+.pc-text {
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+  line-height: 1.7;
+  flex-grow: 1;
+}
+.pc-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-color);
+}
+.pc-tag {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+.pc-arrow {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  transition: all 0.3s;
+  opacity: 0.5;
+}
+.premium-card:hover .pc-arrow {
+  opacity: 1;
+  color: var(--text-primary);
+  transform: translateX(4px);
+}
+.pc-highlight {
+  border-color: rgba(255,255,255,0.1);
+  background: linear-gradient(165deg, rgba(25,25,25,0.98), rgba(12,12,12,0.98));
+}
+.pc-highlight::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(16,185,129,0.5), transparent);
+}
+
+/* =========================================
+   WHY ZK-SOLVENCY CARDS
+   ========================================= */
+.why-card {
+  background: linear-gradient(165deg, rgba(20,20,20,0.9), rgba(8,8,8,0.95));
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  padding: 2.5rem;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.why-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(255,255,255,0.12);
+  box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+}
+.why-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 16px;
+  border: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.8rem;
+}
+.why-title {
+  font-family: var(--font-heading);
+  font-size: 1.2rem;
+  color: var(--text-primary);
+  margin-bottom: 0.8rem;
+  letter-spacing: -0.02em;
+}
+.why-text {
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+  line-height: 1.7;
+}
+
+/* =========================================
+   HOW ZK AUDITS WORK - TIMELINE CARDS V2
+   ========================================= */
+.audit-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  max-width: 700px;
+  margin: 0 auto;
+  position: relative;
+  text-align: left;
+}
+.audit-step {
+  display: flex;
+  align-items: stretch;
+  gap: 2rem;
+  position: relative;
+  padding-bottom: 3rem;
+}
+.audit-step:last-child { padding-bottom: 0; }
+.audit-step:last-child .as-connector { display: none; }
+.as-connector {
+  position: absolute;
+  left: 11px;
+  top: 24px;
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(180deg, var(--border-color), transparent);
+}
+.as-dot {
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.2);
+  background: var(--bg-color);
+  position: relative;
+  z-index: 1;
+  margin-top: 2px;
+}
+.as-dot-white { border-color: rgba(255,255,255,0.4); }
+.as-dot-blue { border-color: rgba(59,130,246,0.6); box-shadow: 0 0 12px rgba(59,130,246,0.2); }
+.as-dot-green { border-color: rgba(16,185,129,0.6); box-shadow: 0 0 12px rgba(16,185,129,0.2); }
+.as-content {
+  background: linear-gradient(165deg, rgba(20,20,20,0.9), rgba(8,8,8,0.95));
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 2rem;
+  flex: 1;
+  transition: all 0.3s;
+}
+.as-content:hover {
+  border-color: rgba(255,255,255,0.12);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+.as-badge {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 100px;
+  padding: 0.3rem 0.8rem;
+  margin-bottom: 1rem;
+}
+.as-title {
+  font-family: var(--font-heading);
+  font-size: 1.2rem;
+  color: var(--text-primary);
+  margin-bottom: 0.6rem;
+  letter-spacing: -0.02em;
+}
+.as-text {
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+  line-height: 1.7;
+}
+@media (max-width: 600px) {
+  .audit-steps { gap: 0; }
+  .audit-step { gap: 1rem; }
+  .as-content { padding: 1.5rem; }
+}
+
+/* =========================================
+   BENTO GRID — Feature Cards
+   ========================================= */
+.bento-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 1.2rem;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+.bento-large { grid-row: span 2; }
+.bento-card {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s;
+  background: linear-gradient(160deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
+  border: 1px solid rgba(255,255,255,0.06);
+}
+.bento-card:hover {
+  transform: translateY(-6px) scale(1.01);
+  box-shadow: 0 30px 60px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.08);
+}
+.bento-shine {
+  position: absolute;
+  top: 0; left: -100%; width: 60%; height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.03), transparent);
+  transition: left 0.8s;
+  pointer-events: none;
+}
+.bento-card:hover .bento-shine { left: 120%; }
+.bento-inner { padding: 2.5rem; display: flex; flex-direction: column; height: 100%; position: relative; z-index: 1; }
+.bento-large .bento-inner { padding: 3rem; }
+.bento-badge {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  font-family: var(--font-mono); font-size: 0.72rem; text-transform: uppercase;
+  letter-spacing: 0.15em; color: var(--text-secondary);
+  margin-bottom: 2rem;
+}
+.bento-dot { width: 6px; height: 6px; border-radius: 50%; }
+.bento-dot-blue { background: #60a5fa; box-shadow: 0 0 8px rgba(96,165,250,0.6); }
+.bento-dot-green { background: #10b981; box-shadow: 0 0 8px rgba(16,185,129,0.6); }
+.bento-dot-purple { background: #a78bfa; box-shadow: 0 0 8px rgba(167,139,250,0.6); }
+.bento-title {
+  font-family: var(--font-heading); font-size: 2rem; color: var(--text-primary);
+  letter-spacing: -0.03em; line-height: 1.15; margin-bottom: 1rem;
+}
+.bento-large .bento-title { font-size: 2.8rem; }
+.bento-desc { color: var(--text-secondary); font-size: 0.92rem; line-height: 1.7; flex-grow: 1; }
+.bento-stats {
+  display: flex; gap: 2.5rem; margin-top: 2rem; padding-top: 1.5rem;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+.bento-stat { display: flex; flex-direction: column; gap: 0.3rem; }
+.bento-stat-value { font-family: var(--font-mono); font-size: 1.6rem; color: var(--text-primary); font-weight: 600; }
+.bento-stat-label { font-size: 0.72rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.1em; }
+.bento-cta {
+  display: inline-flex; align-items: center; gap: 0.6rem; margin-top: 1.5rem;
+  font-family: var(--font-mono); font-size: 0.78rem; color: rgba(255,255,255,0.5);
+  text-transform: uppercase; letter-spacing: 0.1em; transition: all 0.3s;
+}
+.bento-card:hover .bento-cta { color: var(--text-primary); }
+.bento-card:hover .bento-cta i { transform: translateX(4px); }
+.bento-cta i { transition: transform 0.3s; }
+@media (max-width: 768px) {
+  .bento-grid { grid-template-columns: 1fr; }
+  .bento-large { grid-row: span 1; }
+  .bento-large .bento-title { font-size: 2rem; }
+}
+
+/* =========================================
+   WHY ZK-SOLVENCY — Metric Cards V2
+   ========================================= */
+.why-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.2rem;
+}
+@media (max-width: 900px) { .why-grid { grid-template-columns: 1fr; } }
+.why-v2 {
+  position: relative; border-radius: 20px; overflow: hidden;
+  background: linear-gradient(160deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
+  border: 1px solid rgba(255,255,255,0.06);
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s;
+}
+.why-v2:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 25px 50px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.08);
+}
+.why-v2-gradient {
+  position: absolute; top: -60px; right: -60px; width: 160px; height: 160px;
+  border-radius: 50%; filter: blur(60px); opacity: 0; transition: opacity 0.5s;
+  pointer-events: none;
+}
+.why-v2:hover .why-v2-gradient { opacity: 1; }
+.why-grad-blue { background: rgba(59,130,246,0.2); }
+.why-grad-green { background: rgba(16,185,129,0.2); }
+.why-grad-purple { background: rgba(139,92,246,0.2); }
+.why-v2-inner { padding: 2.5rem; position: relative; z-index: 1; }
+.why-v2-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.8rem; }
+.why-v2-icon { font-size: 1.6rem; }
+.why-v2-metric {
+  font-family: var(--font-mono); font-size: 1.8rem; font-weight: 700;
+  color: var(--text-primary); letter-spacing: -0.03em;
+}
+.why-v2-title {
+  font-family: var(--font-heading); font-size: 1.2rem; color: var(--text-primary);
+  margin-bottom: 0.8rem; letter-spacing: -0.02em;
+}
+.why-v2-text { color: var(--text-secondary); font-size: 0.88rem; line-height: 1.7; margin-bottom: 1.5rem; }
+.why-v2-bar {
+  width: 100%; height: 3px; background: rgba(255,255,255,0.06); border-radius: 10px; overflow: hidden;
+}
+.why-v2-fill { height: 100%; border-radius: 10px; transition: width 1s ease; }
+
+/* =========================================
+   HOW ZK AUDITS WORK — Pipeline Cards
+   ========================================= */
+.pipeline-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; text-align: left;
+}
+@media (max-width: 900px) { .pipeline-grid { grid-template-columns: 1fr; } }
+.pipe-card {
+  position: relative; border-radius: 20px; overflow: hidden; padding: 2.5rem;
+  background: linear-gradient(160deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
+  border: 1px solid rgba(255,255,255,0.06);
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s;
+}
+.pipe-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 25px 50px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.08);
+}
+.pipe-shine {
+  position: absolute; top: 0; left: -100%; width: 60%; height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.03), transparent);
+  transition: left 0.8s; pointer-events: none;
+}
+.pipe-card:hover .pipe-shine { left: 120%; }
+.pipe-num-wrap { display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; }
+.pipe-num {
+  font-family: var(--font-mono); font-size: 0.8rem; font-weight: 700;
+  color: var(--text-secondary); border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px; padding: 0.4rem 0.7rem; letter-spacing: 0.05em;
+}
+.pipe-line { flex: 1; height: 1px; background: linear-gradient(90deg, rgba(255,255,255,0.1), transparent); }
+.pipe-icon {
+  width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center;
+  justify-content: center; font-size: 1.3rem; margin-bottom: 1.5rem;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+.pipe-title {
+  font-family: var(--font-heading); font-size: 1.2rem; color: var(--text-primary);
+  margin-bottom: 0.8rem; letter-spacing: -0.02em;
+}
+.pipe-text { color: var(--text-secondary); font-size: 0.88rem; line-height: 1.7; }
