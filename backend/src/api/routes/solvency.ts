@@ -57,6 +57,8 @@ router.get('/latest-proof', asyncHandler(async (_req: Request, res: Response) =>
 router.get('/history', asyncHandler(async (req: Request, res: Response) => {
   const limit = Math.min(parseInt(req.query.limit as string) || 50, 100);
   const offset = parseInt(req.query.offset as string) || 0;
+  // days parameter is accepted but not used for filtering (no timestamp filtering in DB)
+  // const days = parseInt(req.query.days as string) || 30;
   
   const db = getDb();
   const rounds = await db.query.proofRounds.findMany({
@@ -65,26 +67,24 @@ router.get('/history', asyncHandler(async (req: Request, res: Response) => {
     offset,
   }) as any[];
   
-  const total = await db.query.proofRounds.findMany() as any[];
-  
-  res.json({
-    rounds: rounds.map((r: any) => ({
-      roundId: r.id,
-      roundNumber: r.roundNumber,
-      merkleRoot: r.merkleRoot,
-      totalAssets: r.totalAssets,
-      totalLiabilities: r.totalLiabilities,
-      status: r.status,
-      createdAt: r.createdAt,
-      verifiedAt: r.verifiedAt,
-      chainTxHash: r.chainTxHash,
-    })),
-    pagination: {
-      limit,
-      offset,
-      total: total.length,
-    },
+  // Transform to match frontend SolvencyHistoryEntry type
+  const history = rounds.map((r: any) => {
+    const totalAssets = BigInt(r.totalAssets || 0);
+    const totalLiabilities = BigInt(r.totalLiabilities || 1);
+    const solvencyRatio = totalLiabilities > 0n 
+      ? Number((totalAssets * 10000n) / totalLiabilities) / 100 
+      : 0;
+    
+    return {
+      timestamp: r.createdAt ? new Date(r.createdAt).getTime() : Date.now(),
+      solvencyRatio: parseFloat(solvencyRatio.toFixed(2)),
+      totalAssets: r.totalAssets?.toString() || '0',
+      totalLiabilities: r.totalLiabilities?.toString() || '0',
+      proofHash: r.chainTxHash || r.merkleRoot || '0x0',
+    };
   });
+  
+  res.json(history);
 }));
 
 router.post('/simulate', asyncHandler(async (req: Request, res: Response) => {

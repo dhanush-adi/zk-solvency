@@ -11,7 +11,7 @@ const router = Router();
 router.use('/health', healthRouter);
 router.use('/solvency', solvencyRouter);
 router.use('/proof', proofRouter);
-router.use('/inclusion', inclusionRouter);
+router.use('/inclusion-proof', inclusionRouter);
 router.use('/auditor', auditorRouter);
 router.use('/attest', attestationRouter);
 

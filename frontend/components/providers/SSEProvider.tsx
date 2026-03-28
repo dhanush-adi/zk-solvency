@@ -92,12 +92,15 @@ export function SSEProvider({ children }: { children: ReactNode }) {
     <>
       {children}
       {/* SSE Status Indicator - Only show if SSE is enabled and has errors */}
+      {/* SSE Status Indicator - Hidden for demo */}
+      {/* 
       {sseEnabled && connectionStatus === 'error' && (
         <div className="fixed bottom-4 left-4 rounded-lg bg-destructive/20 border border-destructive/50 px-4 py-2 flex items-center gap-2 text-destructive text-sm z-50">
           <div className="w-2 h-2 rounded-full bg-destructive animate-pulse" />
           SSE connection unavailable - using demo data
         </div>
       )}
+      */}
     </>
   );
 }

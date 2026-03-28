@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-import { eq } from 'drizzle-orm';
+import { eq, desc } from 'drizzle-orm';
 import { getDb, schema } from '../../db/client.js';
 import { getInclusionProof } from '../../services/merkleService.js';
 import { asyncHandler } from '../middleware/errorHandler.js';
@@ -7,9 +7,10 @@ import { authMiddleware } from '../middleware/auth.js';
 
 const router = Router();
 
-router.use(authMiddleware);
+// authMiddleware removed for public verification
+// router.use(authMiddleware);
 
-router.post('/prove', asyncHandler(async (req: Request, res: Response) => {
+router.post('/verify', asyncHandler(async (req: Request, res: Response) => {
   const { userId, signature } = req.body;
   
   if (!userId || !signature) {
@@ -30,6 +31,7 @@ router.post('/prove', asyncHandler(async (req: Request, res: Response) => {
   
   const latestRound = await db.query.proofRounds.findFirst({
     where: eq(schema.proofRounds.status, 'verified'),
+    orderBy: [desc(schema.proofRounds.roundNumber)],
   }) as any;
   
   if (!latestRound) {
@@ -59,6 +61,18 @@ router.post('/prove', asyncHandler(async (req: Request, res: Response) => {
     verified: isVerified,
     timestamp: new Date().toISOString(),
   });
+}));
+
+router.get('/history', asyncHandler(async (req: Request, res: Response) => {
+  // For now return an empty array or recent verified rounds
+  const db = getDb();
+  const rounds = await db.query.proofRounds.findMany({
+    where: eq(schema.proofRounds.status, 'verified'),
+    limit: 10,
+    orderBy: [desc(schema.proofRounds.roundNumber)],
+  });
+  
+  res.json(rounds);
 }));
 
 export default router;

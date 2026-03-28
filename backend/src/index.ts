@@ -1,5 +1,6 @@
 import express from 'express';
 import 'express-async-errors';
+import cors from 'cors';
 import { initEnv, getEnv } from './config/env.js';
 import { getRedisClient, closeRedis } from './config/redis.js';
 import { getDb, closeDb } from './db/client.js';
@@ -18,6 +19,7 @@ async function main() {
   
   const app = express();
   
+  app.use(cors());
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
   

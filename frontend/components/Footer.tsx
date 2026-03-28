@@ -27,7 +27,7 @@ export function Footer() {
                 { label: 'API Reference', href: '#' },
                 { label: 'GitHub', href: '#' },
               ].map((link) => (
-                <li key={link.href}>
+                <li key={link.label}>
                   <a
                     href={link.href}
                     className="text-muted-foreground hover:text-accent transition-colors"
@@ -44,14 +44,15 @@ export function Footer() {
             <h4 className="font-semibold text-foreground text-sm">Connect</h4>
             <div className="flex items-center gap-4">
               {[
-                { icon: Github, href: '#' },
-                { icon: Twitter, href: '#' },
-                { icon: Mail, href: '#' },
-              ].map(({ icon: Icon, href }) => (
+                { icon: Github, href: '#', label: 'GitHub' },
+                { icon: Twitter, href: '#', label: 'Twitter' },
+                { icon: Mail, href: '#', label: 'Email' },
+              ].map(({ icon: Icon, href, label }) => (
                 <a
-                  key={href}
+                  key={label}
                   href={href}
                   className="p-2 rounded-lg hover:bg-card text-muted-foreground hover:text-accent transition-colors"
+                  aria-label={label}
                 >
                   <Icon className="w-4 h-4" />
                 </a>

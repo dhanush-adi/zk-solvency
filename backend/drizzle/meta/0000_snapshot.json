@@ -1,0 +1,422 @@
+{
+  "id": "5eb1bbaf-1329-463d-a8d6-595ae0f61015",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "version": "6",
+  "dialect": "postgresql",
+  "tables": {
+    "public.accounts": {
+      "name": "accounts",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar(36)",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "exchange_id": {
+          "name": "exchange_id",
+          "type": "varchar(36)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "balance": {
+          "name": "balance",
+          "type": "numeric(78, 0)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "balance_encrypted": {
+          "name": "balance_encrypted",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "hashed_leaf": {
+          "name": "hashed_leaf",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "nullifier_hash": {
+          "name": "nullifier_hash",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "accounts_exchange_id_idx": {
+          "name": "accounts_exchange_id_idx",
+          "columns": [
+            "exchange_id"
+          ],
+          "isUnique": false
+        },
+        "accounts_user_id_idx": {
+          "name": "accounts_user_id_idx",
+          "columns": [
+            "user_id"
+          ],
+          "isUnique": false
+        },
+        "accounts_hashed_leaf_idx": {
+          "name": "accounts_hashed_leaf_idx",
+          "columns": [
+            "hashed_leaf"
+          ],
+          "isUnique": false
+        },
+        "accounts_nullifier_hash_idx": {
+          "name": "accounts_nullifier_hash_idx",
+          "columns": [
+            "nullifier_hash"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.merkle_nodes": {
+      "name": "merkle_nodes",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar(36)",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "round_id": {
+          "name": "round_id",
+          "type": "varchar(36)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "index": {
+          "name": "index",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "level": {
+          "name": "level",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "hash": {
+          "name": "hash",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "is_root": {
+          "name": "is_root",
+          "type": "varchar(1)",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'0'"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "merkle_nodes_round_id_idx": {
+          "name": "merkle_nodes_round_id_idx",
+          "columns": [
+            "round_id"
+          ],
+          "isUnique": false
+        },
+        "merkle_nodes_level_idx": {
+          "name": "merkle_nodes_level_idx",
+          "columns": [
+            "level"
+          ],
+          "isUnique": false
+        },
+        "merkle_nodes_hash_idx": {
+          "name": "merkle_nodes_hash_idx",
+          "columns": [
+            "hash"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.nullifiers": {
+      "name": "nullifiers",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar(36)",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "nullifier_hash": {
+          "name": "nullifier_hash",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "account_id": {
+          "name": "account_id",
+          "type": "varchar(36)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "round_id": {
+          "name": "round_id",
+          "type": "varchar(36)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "on_chain_confirmed": {
+          "name": "on_chain_confirmed",
+          "type": "varchar(1)",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'0'"
+        },
+        "tx_hash": {
+          "name": "tx_hash",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "confirmed_at": {
+          "name": "confirmed_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "nullifiers_hash_idx": {
+          "name": "nullifiers_hash_idx",
+          "columns": [
+            "nullifier_hash"
+          ],
+          "isUnique": false
+        },
+        "nullifiers_account_id_idx": {
+          "name": "nullifiers_account_id_idx",
+          "columns": [
+            "account_id"
+          ],
+          "isUnique": false
+        },
+        "nullifiers_round_id_idx": {
+          "name": "nullifiers_round_id_idx",
+          "columns": [
+            "round_id"
+          ],
+          "isUnique": false
+        },
+        "nullifiers_tx_hash_idx": {
+          "name": "nullifiers_tx_hash_idx",
+          "columns": [
+            "tx_hash"
+          ],
+          "isUnique": false
+        },
+        "nullifiers_unique_round_account": {
+          "name": "nullifiers_unique_round_account",
+          "columns": [
+            "round_id",
+            "account_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.proof_rounds": {
+      "name": "proof_rounds",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar(36)",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "round_number": {
+          "name": "round_number",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "merkle_root": {
+          "name": "merkle_root",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "total_assets": {
+          "name": "total_assets",
+          "type": "numeric(78, 0)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "total_liabilities": {
+          "name": "total_liabilities",
+          "type": "numeric(78, 0)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "stark_proof_cid": {
+          "name": "stark_proof_cid",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "chain_tx_hash": {
+          "name": "chain_tx_hash",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "previous_round_hash": {
+          "name": "previous_round_hash",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "cycle_id": {
+          "name": "cycle_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "nullifier_count": {
+          "name": "nullifier_count",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "proof_data": {
+          "name": "proof_data",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "status": {
+          "name": "status",
+          "type": "varchar(20)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'pending'"
+        },
+        "error_message": {
+          "name": "error_message",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "verified_at": {
+          "name": "verified_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "proof_rounds_round_number_idx": {
+          "name": "proof_rounds_round_number_idx",
+          "columns": [
+            "round_number"
+          ],
+          "isUnique": false
+        },
+        "proof_rounds_merkle_root_idx": {
+          "name": "proof_rounds_merkle_root_idx",
+          "columns": [
+            "merkle_root"
+          ],
+          "isUnique": false
+        },
+        "proof_rounds_status_idx": {
+          "name": "proof_rounds_status_idx",
+          "columns": [
+            "status"
+          ],
+          "isUnique": false
+        },
+        "proof_rounds_chain_tx_hash_idx": {
+          "name": "proof_rounds_chain_tx_hash_idx",
+          "columns": [
+            "chain_tx_hash"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "proof_rounds_round_number_unique": {
+          "name": "proof_rounds_round_number_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "round_number"
+          ]
+        }
+      }
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

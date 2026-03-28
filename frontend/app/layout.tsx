@@ -3,8 +3,10 @@ import { Geist, Geist_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { QueryProvider } from '@/components/providers/QueryProvider'
 import { SSEProvider } from '@/components/providers/SSEProvider'
+import { WagmiProvider } from '@/components/providers/WagmiProvider'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
 import { AppLayout } from '@/components/AppLayout'
+import { Toaster } from '@/components/ui/sonner'
 import './globals.css'
 
 const _geist = Geist({ subsets: ["latin"] });
@@ -50,14 +52,17 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning className="dark">
       <body className="font-sans antialiased bg-background text-foreground m-0 p-0">
         <ErrorBoundary>
-          <QueryProvider>
-            <SSEProvider>
-              <AppLayout>
-                {children}
-              </AppLayout>
-              <Analytics />
-            </SSEProvider>
-          </QueryProvider>
+          <WagmiProvider>
+            <QueryProvider>
+              <SSEProvider>
+                <AppLayout>
+                  {children}
+                </AppLayout>
+                <Analytics />
+                <Toaster />
+              </SSEProvider>
+            </QueryProvider>
+          </WagmiProvider>
         </ErrorBoundary>
       </body>
     </html>

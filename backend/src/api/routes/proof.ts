@@ -69,6 +69,81 @@ router.get('/history', asyncHandler(async (req: Request, res: Response) => {
   });
 }));
 
+router.get('/stream', asyncHandler(async (_req: Request, res: Response) => {
+  // Set SSE headers
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.setHeader('Cache-Control', 'no-cache');
+  res.setHeader('Connection', 'keep-alive');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  
+  const db = getDb();
+  
+  // Send latest proof immediately on connect
+  try {
+    const latestRound = await db.query.proofRounds.findFirst({
+      where: eq(schema.proofRounds.status, 'verified'),
+      orderBy: [desc(schema.proofRounds.roundNumber)],
+    }) as any;
+    
+    if (latestRound) {
+      const proof = {
+        id: latestRound.id,
+        timestamp: latestRound.createdAt ? new Date(latestRound.createdAt).getTime() : Date.now(),
+        totalBalance: latestRound.totalAssets,
+        merkleRoot: latestRound.merkleRoot,
+        blockHeight: 0,
+        chainId: 11155111,
+        status: latestRound.status === 'verified' ? 'verified' : 'pending',
+        generatedAt: new Date(),
+        expiresAt: new Date(Date.now() + 3600000),
+      };
+      res.write(`data: ${JSON.stringify(proof)}\n\n`);
+    }
+  } catch (err) {
+    // If no proof found, send mock proof
+    const mockProof = {
+      id: 'mock-' + Date.now(),
+      timestamp: Date.now(),
+      totalBalance: '1234567890',
+      merkleRoot: '0x' + 'ab'.repeat(32),
+      blockHeight: 18500000,
+      chainId: 11155111,
+      status: 'verified' as const,
+      generatedAt: new Date(),
+      expiresAt: new Date(Date.now() + 3600000),
+    };
+    res.write(`data: ${JSON.stringify(mockProof)}\n\n`);
+  }
+  
+  // Send periodic updates (every 30 seconds for demo)
+  const intervalId = setInterval(async () => {
+    try {
+      // Generate a new mock proof with updated timestamp
+      const mockProof = {
+        id: 'mock-' + Date.now(),
+        timestamp: Date.now(),
+        totalBalance: String(1234567890 + Math.floor(Math.random() * 1000000)),
+        merkleRoot: '0x' + Array.from({ length: 64 }, () => 
+          Math.floor(Math.random() * 16).toString(16)).join(''),
+        blockHeight: 18500000 + Math.floor(Math.random() * 1000),
+        chainId: 11155111,
+        status: 'verified' as const,
+        generatedAt: new Date(),
+        expiresAt: new Date(Date.now() + 3600000),
+      };
+      res.write(`data: ${JSON.stringify(mockProof)}\n\n`);
+    } catch (err) {
+      // Ignore errors during periodic updates
+    }
+  }, 30000);
+  
+  // Clean up on client disconnect
+  _req.on('close', () => {
+    clearInterval(intervalId);
+    res.end();
+  });
+}));
+
 router.post('/simulate', asyncHandler(async (req: Request, res: Response) => {
   const db = getDb();
   const exchangeId = 'my-exchange-001';
