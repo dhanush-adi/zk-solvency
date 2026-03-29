@@ -3,8 +3,37 @@ import { eq, desc } from 'drizzle-orm';
 import { getDb, schema } from '../../db/client.js';
 import { asyncHandler } from '../middleware/errorHandler.js';
 import { x402Middleware } from '../middleware/x402.js';
+import { createHmac } from 'crypto';
+import { getEnv } from '../../config/env.js';
 
 const router = Router();
+
+router.post('/simulate-payment', asyncHandler(async (req: Request, res: Response) => {
+  const { amount } = req.body;
+  
+  if (!amount || typeof amount !== 'number') {
+    res.status(400).json({ error: 'Valid amount is required' });
+    return;
+  }
+  
+  const env = getEnv();
+  const paymentId = 'pay_' + Math.random().toString(36).substring(2, 15);
+  const timestamp = Date.now();
+  const signaturePayload = `${paymentId}:${amount}:${timestamp}`;
+  const secret = env.X402_GATEWAY_SECRET;
+  
+  const signature = createHmac('sha256', secret)
+    .update(signaturePayload)
+    .digest('hex');
+    
+  res.json({
+    paymentId,
+    amount,
+    token: 'USDC',
+    signature,
+    timestamp
+  });
+}));
 
 router.use(x402Middleware);
 

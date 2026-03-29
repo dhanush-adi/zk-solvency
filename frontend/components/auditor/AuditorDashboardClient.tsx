@@ -9,6 +9,8 @@ import { StatusBadge } from '@/components/StatusBadge';
 import { CountUpNumber } from '@/components/CountUpNumber';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
+
 interface AuditMetrics {
   totalWallets: number;
   verifiedWallets: number;
@@ -21,22 +23,56 @@ export function AuditorDashboardClient() {
   const { auditLogs } = useSolvencyStore();
   const [isPaid, setIsPaid] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
-
-  const handlePayment = async () => {
-    setIsProcessing(true);
-    // Simulate payment processing
-    setTimeout(() => {
-      setIsPaid(true);
-      setIsProcessing(false);
-    }, 2000);
-  };
-
-  // Mock audit metrics
-  const metrics: AuditMetrics = {
+  const [metrics, setMetrics] = useState<AuditMetrics>({
     totalWallets: 1250,
     verifiedWallets: 1087,
     totalAssetsAudited: '$892,456,000',
     auditsCompleted: 156,
+  });
+
+  const handlePayment = async () => {
+    setIsProcessing(true);
+    
+    try {
+      // 1. Simulate payment and get signature
+      const payRes = await fetch(`${API_URL}/auditor/simulate-payment`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ amount: 100 })
+      });
+      
+      if (!payRes.ok) {
+        throw new Error('Payment simulation failed');
+      }
+      
+      const paymentData = await payRes.json();
+      
+      // 2. Fetch auditor verification data with x402-payment header
+      const verifyRes = await fetch(`${API_URL}/auditor/verify`, {
+        headers: {
+          'x402-payment': JSON.stringify(paymentData)
+        }
+      });
+      
+      if (verifyRes.ok) {
+        const verifyData = await verifyRes.json();
+        if (verifyData.verified) {
+          const totalAssetsNum = Number(String(verifyData.latestRound.totalAssets).replace(/[^0-9.-]+/g, "")) || 0;
+          
+          setMetrics({
+            totalWallets: verifyData.auditPack.accountCount || 1250,
+            verifiedWallets: verifyData.auditPack.accountCount || 1087,
+            totalAssetsAudited: `$${totalAssetsNum.toLocaleString()}`,
+            auditsCompleted: verifyData.totalRounds || 156,
+          });
+        }
+      }
+    } catch (error) {
+      console.error("Auditor data fetch failed, using fallback:", error);
+    } finally {
+      setIsPaid(true);
+      setIsProcessing(false);
+    }
   };
 
   const auditData = [
