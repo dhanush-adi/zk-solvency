@@ -4,6 +4,7 @@ import { getDb, schema } from '../../db/client.js';
 import { getInclusionProof } from '../../services/merkleService.js';
 import { asyncHandler } from '../middleware/errorHandler.js';
 import { authMiddleware } from '../middleware/auth.js';
+import { v4 as uuidv4 } from 'uuid';
 
 const router = Router();
 
@@ -20,15 +21,6 @@ router.post('/verify', asyncHandler(async (req: Request, res: Response) => {
   
   const db = getDb();
   
-  const account = await db.query.accounts.findFirst({
-    where: eq(schema.accounts.userId, userId),
-  }) as any;
-  
-  if (!account) {
-    res.status(404).json({ error: 'Account not found' });
-    return;
-  }
-  
   const latestRound = await db.query.proofRounds.findFirst({
     where: eq(schema.proofRounds.status, 'verified'),
     orderBy: [desc(schema.proofRounds.roundNumber)],
@@ -36,6 +28,16 @@ router.post('/verify', asyncHandler(async (req: Request, res: Response) => {
   
   if (!latestRound) {
     res.status(404).json({ error: 'No verified proof round found' });
+    return;
+  }
+  
+  // Find the user's account (most recent entry)
+  const account = await db.query.accounts.findFirst({
+    where: eq(schema.accounts.userId, userId),
+  }) as any;
+  
+  if (!account) {
+    res.status(404).json({ error: 'Account not found' });
     return;
   }
   
@@ -48,18 +50,21 @@ router.post('/verify', asyncHandler(async (req: Request, res: Response) => {
   
   const isVerified = proof.leaf === account.hashedLeaf;
   
+  // Return response matching frontend InclusionProof type
   res.json({
+    id: uuidv4(),
+    wallet: account.id,
     userId,
+    balance: account.balance.toString(),
     merkleProof: {
       leaf: proof.leaf,
       siblings: proof.siblings,
       pathIndices: proof.pathIndices,
     },
-    roundId: latestRound.id,
-    roundNumber: latestRound.roundNumber,
     merkleRoot: latestRound.merkleRoot,
+    leafIndex: proof.pathIndices[0] || 0,
     verified: isVerified,
-    timestamp: new Date().toISOString(),
+    proofOfReservesId: latestRound.id,
   });
 }));
 

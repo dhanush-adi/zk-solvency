@@ -1,6 +1,8 @@
 import express from 'express';
 import 'express-async-errors';
 import cors from 'cors';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { initEnv, getEnv } from './config/env.js';
 import { getRedisClient, closeRedis } from './config/redis.js';
 import { getDb, closeDb } from './db/client.js';
@@ -8,6 +10,9 @@ import router from './api/router.js';
 import { errorHandler } from './api/middleware/errorHandler.js';
 import { initProofScheduler, startProofScheduler, stopProofScheduler } from './services/proofScheduler.js';
 import Pino from 'pino';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const logger = Pino({ name: 'main' });
 
@@ -22,6 +27,11 @@ async function main() {
   app.use(cors());
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
+  
+  // Serve landing page at root
+  app.get('/', (_req, res) => {
+    res.sendFile(path.join(__dirname, 'api/views/landing.html'));
+  });
   
   app.use((req, res, next) => {
     const start = Date.now();

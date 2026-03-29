@@ -14,7 +14,7 @@ import { MerklePathVisualizer } from '@/components/MerklePathVisualizer';
 import { cn } from '@/lib/utils';
 
 const walletSchema = z.object({
-  walletAddress: z.string().regex(/^0x[a-fA-F0-9]{40}$/, 'Invalid Ethereum address'),
+  userId: z.string().min(1, 'User ID is required (e.g. user_0, user_5)'),
 });
 
 type WalletFormData = z.infer<typeof walletSchema>;
@@ -36,7 +36,7 @@ export function InclusionCheckerClient() {
   const onSubmit = async (data: WalletFormData) => {
     if (!proof) return;
     setSubmitted(true);
-    verifyInclusion(data.walletAddress, proof.id);
+    verifyInclusion(data.userId, proof.id);
   };
 
   return (
@@ -83,23 +83,23 @@ export function InclusionCheckerClient() {
 
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
                   <div className="space-y-3">
-                    <label htmlFor="wallet" className="block text-xs font-bold text-muted-foreground uppercase tracking-widest px-1">
-                      Ethereum Wallet Address
+                    <label htmlFor="userId" className="block text-xs font-bold text-muted-foreground uppercase tracking-widest px-1">
+                      Account User ID
                     </label>
                     <div className="relative group/input">
                       <div className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within/input:text-accent transition-colors">
                         <Search className="w-5 h-5" />
                       </div>
                       <input
-                        id="wallet"
+                        id="userId"
                         type="text"
-                        placeholder="0x..."
-                        {...register('walletAddress')}
+                        placeholder="user_0"
+                        {...register('userId')}
                         className="w-full pl-12 pr-4 py-4 rounded-2xl bg-accent/5 border border-border/50 text-foreground font-mono text-sm placeholder:text-muted-foreground/30 focus:outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent/40 transition-all"
                       />
                     </div>
-                    {errors.walletAddress && (
-                      <p className="text-destructive text-xs font-bold px-1 mt-2 animate-pulse">{errors.walletAddress.message}</p>
+                    {errors.userId && (
+                      <p className="text-destructive text-xs font-bold px-1 mt-2 animate-pulse">{errors.userId.message}</p>
                     )}
                   </div>
 
@@ -155,12 +155,12 @@ export function InclusionCheckerClient() {
 
                       <div className="grid grid-cols-2 gap-4">
                         <div className="p-4 rounded-2xl bg-accent/5 border border-border/50">
-                          <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1">Stated Balance</p>
-                          <p className="text-xl font-black text-foreground font-mono tracking-tighter italic">{inclusionProof.balance}</p>
+                          <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1">User ID Match</p>
+                          <p className="text-xl font-black text-foreground font-mono tracking-tighter italic">{inclusionProof.userId}</p>
                         </div>
                         <div className="p-4 rounded-2xl bg-accent/5 border border-border/50">
                           <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1">Path Depth</p>
-                          <p className="text-xl font-black text-foreground font-mono tracking-tighter italic">{inclusionProof.merkleProof.length} levels</p>
+                          <p className="text-xl font-black text-foreground font-mono tracking-tighter italic">{inclusionProof.merkleProof.siblings.length || 0} levels</p>
                         </div>
                       </div>
 
@@ -219,8 +219,8 @@ export function InclusionCheckerClient() {
                       className="flex-1"
                     >
                       <MerklePathVisualizer
-                        merkleProof={inclusionProof.merkleProof}
-                        leafHash={inclusionProof.merkleRoot}
+                        merkleProof={inclusionProof.merkleProof.siblings}
+                        leafHash={inclusionProof.merkleProof.leaf}
                         merkleRoot={proof?.merkleRoot || ''}
                       />
                     </motion.div>

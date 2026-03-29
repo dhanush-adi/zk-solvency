@@ -21,14 +21,14 @@ export class NullifierError extends Error {
   }
 }
 
-function keccak256(data: string): string {
-  const hash = createHash('keccak256');
+function hashData(data: string): string {
+  const hash = createHash('sha256');
   hash.update(data);
   return '0x' + hash.digest('hex');
 }
 
 export function generateNullifier(accountId: string, roundId: string): string {
-  return keccak256(`${accountId}:${roundId}`);
+  return hashData(`${accountId}:${roundId}`);
 }
 
 export async function registerNullifiers(

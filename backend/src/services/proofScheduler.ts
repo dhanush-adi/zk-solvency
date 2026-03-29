@@ -14,8 +14,8 @@ import Pino from 'pino';
 
 const logger = Pino({ name: 'proof-scheduler' });
 
-function keccak256(data: string): string {
-  const hash = createHash('keccak256');
+function hashData(data: string): string {
+  const hash = createHash('sha256');
   hash.update(data);
   return '0x' + hash.digest('hex');
 }
@@ -153,7 +153,7 @@ export async function processProofRound(data: ProofJobData): Promise<{
     
     const previousRoundHash = previousRound?.merkleRoot || '0x0000000000000000000000000000000000000000000000000000000000000000';
     
-    const nullifierSetRoot = keccak256(nullifiers.map(n => n.hash).join(''));
+    const nullifierSetRoot = hashData(nullifiers.map(n => n.hash).join(''));
     
     const totalAssets = totalLiabilities;
     

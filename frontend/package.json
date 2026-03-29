@@ -1,6 +1,25 @@
 {
-  "name": "my-project",
-  "version": "0.1.0",
+  "name": "zk-solvency-frontend",
+  "version": "1.0.0",
+  "description": "Zero-Knowledge Solvency Verification Frontend - Production-ready dashboard for privacy-preserving solvency proofs",
+  "keywords": [
+    "zero-knowledge",
+    "zk-proofs",
+    "solvency",
+    "nextjs",
+    "react",
+    "typescript",
+    "tailwindcss",
+    "web3",
+    "blockchain"
+  ],
+  "author": "ZK-Solvency Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zkSolvency/zk-solvency.git",
+    "directory": "frontend"
+  },
   "private": true,
   "scripts": {
     "dev": "next dev",

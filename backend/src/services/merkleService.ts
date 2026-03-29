@@ -16,8 +16,8 @@ export interface AccountData {
 
 let inMemoryTree: MerkleTree | null = null;
 
-function keccak256(data: string): string {
-  const hash = createHash('keccak256');
+function hashData(data: string): string {
+  const hash = createHash('sha256');
   hash.update(data.startsWith('0x') ? data.slice(2) : data);
   return '0x' + hash.digest('hex');
 }
@@ -62,7 +62,7 @@ function buildTreeNodes(leaves: string[]): string[][] {
       const left = prev[i];
       const right = prev[i + 1] || nullLeaf;
       const combined = left < right ? left + right : right + left;
-      curr.push(keccak256(combined));
+      curr.push(hashData(combined));
     }
     nodes.push(curr);
   }
@@ -77,18 +77,27 @@ export async function getRoot(): Promise<string | null> {
   return inMemoryTree.root;
 }
 
-export async function getInclusionProof(userId: string, roundId: string): Promise<MerkleProof | null> {
+export async function getInclusionProof(userId: string, _roundId: string): Promise<MerkleProof | null> {
   const db = getDb();
   
-  const accounts = await db.query.accounts.findMany({
-    where: eq(schema.accounts.exchangeId, roundId),
-  }) as any[];
+  // Get all accounts (for now, from any exchange) to build the tree
+  // In production, this should be scoped to the specific round's accounts
+  const accounts = await db.query.accounts.findMany() as any[];
   
   if (accounts.length === 0) {
     return null;
   }
   
-  const sortedAccounts = accounts.sort((a: any, b: any) => a.userId.localeCompare(b.userId));
+  // Get unique accounts by userId (latest entry for each user)
+  const uniqueAccounts = new Map<string, any>();
+  for (const acc of accounts) {
+    if (!uniqueAccounts.has(acc.userId) || acc.createdAt > uniqueAccounts.get(acc.userId).createdAt) {
+      uniqueAccounts.set(acc.userId, acc);
+    }
+  }
+  
+  const accountList = Array.from(uniqueAccounts.values());
+  const sortedAccounts = accountList.sort((a: any, b: any) => a.userId.localeCompare(b.userId));
   const index = sortedAccounts.findIndex((acc: any) => acc.userId === userId);
   
   if (index === -1) {

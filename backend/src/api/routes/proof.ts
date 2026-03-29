@@ -100,38 +100,34 @@ router.get('/stream', asyncHandler(async (_req: Request, res: Response) => {
       res.write(`data: ${JSON.stringify(proof)}\n\n`);
     }
   } catch (err) {
-    // If no proof found, send mock proof
-    const mockProof = {
-      id: 'mock-' + Date.now(),
-      timestamp: Date.now(),
-      totalBalance: '1234567890',
-      merkleRoot: '0x' + 'ab'.repeat(32),
-      blockHeight: 18500000,
-      chainId: 11155111,
-      status: 'verified' as const,
-      generatedAt: new Date(),
-      expiresAt: new Date(Date.now() + 3600000),
-    };
-    res.write(`data: ${JSON.stringify(mockProof)}\n\n`);
+    // No proof round found yet — send waiting status
+    res.write(`data: ${JSON.stringify({ status: 'waiting', message: 'No verified proof rounds yet' })}\n\n`);
   }
   
-  // Send periodic updates (every 30 seconds for demo)
+  // Poll DB for latest verified proof every 30 seconds
+  let lastKnownRoundId: string | null = null;
   const intervalId = setInterval(async () => {
     try {
-      // Generate a new mock proof with updated timestamp
-      const mockProof = {
-        id: 'mock-' + Date.now(),
-        timestamp: Date.now(),
-        totalBalance: String(1234567890 + Math.floor(Math.random() * 1000000)),
-        merkleRoot: '0x' + Array.from({ length: 64 }, () => 
-          Math.floor(Math.random() * 16).toString(16)).join(''),
-        blockHeight: 18500000 + Math.floor(Math.random() * 1000),
-        chainId: 11155111,
-        status: 'verified' as const,
-        generatedAt: new Date(),
-        expiresAt: new Date(Date.now() + 3600000),
-      };
-      res.write(`data: ${JSON.stringify(mockProof)}\n\n`);
+      const currentLatest = await db.query.proofRounds.findFirst({
+        where: eq(schema.proofRounds.status, 'verified'),
+        orderBy: [desc(schema.proofRounds.roundNumber)],
+      }) as any;
+
+      if (currentLatest && currentLatest.id !== lastKnownRoundId) {
+        lastKnownRoundId = currentLatest.id;
+        const updatedProof = {
+          id: currentLatest.id,
+          timestamp: currentLatest.createdAt ? new Date(currentLatest.createdAt).getTime() : Date.now(),
+          totalBalance: currentLatest.totalAssets,
+          merkleRoot: currentLatest.merkleRoot,
+          blockHeight: currentLatest.roundNumber || 0,
+          chainId: 11155111,
+          status: 'verified' as const,
+          generatedAt: currentLatest.createdAt ? new Date(currentLatest.createdAt) : new Date(),
+          expiresAt: new Date(Date.now() + 3600000),
+        };
+        res.write(`data: ${JSON.stringify(updatedProof)}\n\n`);
+      }
     } catch (err) {
       // Ignore errors during periodic updates
     }
@@ -146,7 +142,8 @@ router.get('/stream', asyncHandler(async (_req: Request, res: Response) => {
 
 router.post('/simulate', asyncHandler(async (req: Request, res: Response) => {
   const db = getDb();
-  const exchangeId = 'my-exchange-001';
+  const roundId = crypto.randomUUID();
+  const exchangeId = roundId; // Map exchangeId to roundId so inclusion proofs group correctly
   const accountCount = req.body.accountCount || 10;
   
   const mockAccounts: Array<{ id: string; userId: string; balance: bigint; hashedLeaf: string }> = [];
@@ -165,6 +162,10 @@ router.post('/simulate', asyncHandler(async (req: Request, res: Response) => {
   }
   
   const totalLiabilities = mockAccounts.reduce((sum, acc) => sum + acc.balance, 0n);
+  
+  // MUST SORT accounts before building Merkle Tree, so the leaves order 
+  // matches what getInclusionProof constructs when generating proofs!
+  mockAccounts.sort((a, b) => a.userId.localeCompare(b.userId));
   
   for (const account of mockAccounts) {
     await db.insert(schema.accounts).values({
@@ -185,7 +186,6 @@ router.post('/simulate', asyncHandler(async (req: Request, res: Response) => {
   }) as any;
   const roundNumber = (latestRound?.roundNumber || 0) + 1;
   
-  const roundId = crypto.randomUUID();
   await db.insert(schema.proofRounds).values({
     id: roundId,
     roundNumber,

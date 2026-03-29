@@ -2,11 +2,41 @@ import { useCallback, useState } from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useSolvencyStore } from '@/store/solvencyStore';
 import { InclusionProof } from '@/lib/types';
-import { generateMockInclusionProof } from '@/lib/mockData';
+
+// DEMO MODE: Set to true to use mock data for screenshots/recordings
+const DEMO_MODE = false;
+
+// Generate a mock inclusion proof for demo purposes
+function generateMockInclusionProof(userId: string): InclusionProof {
+  const leafHash = `0x${Array.from({ length: 64 }, () => Math.floor(Math.random() * 16).toString(16)).join('')}`;
+  
+  // Generate 8-level Merkle path (simulating ~256 accounts)
+  const siblings = Array.from({ length: 8 }, () => 
+    `0x${Array.from({ length: 64 }, () => Math.floor(Math.random() * 16).toString(16)).join('')}`
+  );
+  
+  const pathIndices = Array.from({ length: 8 }, () => Math.round(Math.random()));
+  
+  return {
+    id: `inclusion-${Date.now()}`,
+    wallet: `0x${userId.replace('user_', '')}a1b2c3d4e5f6789012345678901234567890`,
+    userId,
+    balance: (Math.floor(Math.random() * 50000) + 1000).toString(),
+    merkleProof: {
+      leaf: leafHash,
+      siblings,
+      pathIndices,
+    },
+    merkleRoot: '0x7a3b9c4d8e1f2a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b',
+    leafIndex: parseInt(userId.replace('user_', '')) || 0,
+    verified: true,
+    proofOfReservesId: 'proof-2026-03-29-001',
+  };
+}
 
 interface VerifyInclusionParams {
-  walletAddress: string;
-  proofOfReservesId: string;
+  userId: string;
+  signature: string;
 }
 
 export function useInclusionProof() {
@@ -18,55 +48,55 @@ export function useInclusionProof() {
     mutationFn: async (params: VerifyInclusionParams) => {
       setIsVerifying(true);
       try {
-        // Use mock data if no API URL is configured
+        // DEMO MODE: Return mock data after a short delay
+        if (DEMO_MODE) {
+          await new Promise(resolve => setTimeout(resolve, 800)); // Simulate network delay
+          return generateMockInclusionProof(params.userId);
+        }
+
         if (!apiUrl) {
-          await new Promise((resolve) => setTimeout(resolve, 800));
-          return generateMockInclusionProof(params.walletAddress);
+          throw new Error('API URL not configured');
         }
 
         const response = await fetch(`${apiUrl}/api/inclusion-proof/verify`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(params),
-          signal: AbortSignal.timeout(5000),
+          signal: AbortSignal.timeout(10000),
         });
 
         if (!response.ok) {
-          throw new Error('Failed to verify inclusion');
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(errorData.error || `Verification failed (${response.status})`);
         }
 
         return response.json() as Promise<InclusionProof>;
-      } catch (err) {
-        console.error('[useInclusionProof] API error, using mock data:', err);
-        // Fallback to mock data on error
-        return generateMockInclusionProof(params.walletAddress);
       } finally {
         setIsVerifying(false);
       }
     },
     onSuccess: (proof) => {
       setCurrentInclusionProof(proof);
-      addCheckedWallet(proof.wallet, proof);
+      const walletKey = proof.wallet || proof.userId || 'unknown';
+      addCheckedWallet(walletKey, proof);
+      setError(null);
+    },
+    onError: (err: Error) => {
+      setError(err.message);
     },
   });
 
   const getProofHistory = useQuery({
     queryKey: ['inclusionProofHistory'],
     queryFn: async () => {
-      if (!apiUrl) {
-        await new Promise((resolve) => setTimeout(resolve, 300));
-        return [];
-      }
+      if (!apiUrl) return [];
       try {
         const response = await fetch(`${apiUrl}/api/inclusion-proof/history`, {
           signal: AbortSignal.timeout(5000),
         });
-        if (!response.ok) {
-          throw new Error('Failed to fetch proof history');
-        }
+        if (!response.ok) return [];
         return response.json() as Promise<InclusionProof[]>;
       } catch (err) {
-        console.error('[useInclusionProof] Failed to fetch history:', err);
         return [];
       }
     },
@@ -76,9 +106,9 @@ export function useInclusionProof() {
   });
 
   const verifyInclusion = useCallback(
-    (walletAddress: string, proofOfReservesId: string) => {
+    (userId: string, proofOfReservesId: string) => {
       setError(null);
-      return verifyMutation.mutate({ walletAddress, proofOfReservesId });
+      return verifyMutation.mutate({ userId, signature: 'demo' });
     },
     [verifyMutation]
   );

@@ -18,8 +18,9 @@ export function SolvencyRatioGauge({
   liabilities,
   className,
 }: SolvencyRatioGaugeProps) {
-  // Convert ratio to percentage if needed
-  const percentage = ratio > 1 ? ratio : ratio * 100;
+  // We assume ratio is a pure ratio (e.g. 1.02), we want to show it as 102%
+  const percentage = ratio * 100;
+  // For the chart, we cap it at 100% since it's a 100% based circle
   const safePercentage = Math.min(Math.max(percentage, 0), 100);
 
   const data = [
@@ -76,7 +77,7 @@ export function SolvencyRatioGauge({
             className="text-4xl font-black text-foreground tracking-tighter italic"
           >
             <CountUpNumber
-              value={safePercentage}
+              value={percentage}
               decimals={1}
               suffix="%"
             />

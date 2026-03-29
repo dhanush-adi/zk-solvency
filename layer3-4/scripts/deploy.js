@@ -71,7 +71,7 @@ async function main() {
 
   // ── Declare contract class ────────────────────────────────────────
   console.log('📜 Declaring contract class...');
-  const declareResponse = await account.declare({ contract: sierra, casm });
+  const declareResponse = await account.declare({ contract: sierra, casm }, { blockIdentifier: 'latest' });
   console.log('   Class hash:', declareResponse.class_hash);
   await provider.waitForTransaction(declareResponse.transaction_hash);
 

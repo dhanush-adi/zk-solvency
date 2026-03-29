@@ -22,6 +22,9 @@ const envSchema = z.object({
   PROVER_API_KEY: z.string().min(1).optional(),
   PROVER_ADAPTER: z.enum(['sp1', 'stark']).default('sp1'),
   MOCK_PROVER: z.enum(['true', 'false']).default('false'),
+  NETWORK_PRIVATE_KEY: z.string().min(1).optional(),
+  SP1_PROVER: z.string().optional(),
+  SP1_HOST_BINARY: z.string().optional(),
 
   // Authentication
   JWT_SECRET: z.string().min(32),

@@ -4,7 +4,7 @@ import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { motion } from 'framer-motion';
 
 interface HistoryEntry {
-  timestamp: string;
+  timestamp: string | number;
   solvencyRatio: number;
 }
 

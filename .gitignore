@@ -29,11 +29,25 @@ circuit_output/
 cairo/target/dev/incremental/
 cairo/target/dev/*.test.*
 
-# Rust/SP1 circuit build
-circuits/solvency/target/
+# Rust/SP1 circuit build artifacts
+**/target/
 circuits/solvency/input.json
 circuits/solvency/output.json
 
 # Auto-generated deployments (keep in prod, gitignore locally)
 # deployments/SolvencyVerifier.json
 # deployments/ProofRegistry.json
+
+# Layer3-4 build artifacts and binaries
+*.tar.gz
+starknet-devnet
+*.rlib
+*.rmeta
+*.so
+*.d
+
+# Additional Build Outputs
+**/cairo/target/
+**/*.tsbuildinfo
+**/.next/
+frontend/.next/

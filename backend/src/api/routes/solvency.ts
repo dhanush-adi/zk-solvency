@@ -9,8 +9,8 @@ import { createHash } from 'crypto';
 
 const router = Router();
 
-function keccak256(data: string): string {
-  const hash = createHash('keccak256');
+function hashData(data: string): string {
+  const hash = createHash('sha256');
   hash.update(data);
   return '0x' + hash.digest('hex');
 }
@@ -97,7 +97,7 @@ router.post('/simulate', asyncHandler(async (req: Request, res: Response) => {
   for (let i = 0; i < accountCount; i++) {
     const userId = `user_${i}`;
     const balance = BigInt(Math.floor(Math.random() * 1000000));
-    const hashedLeaf = keccak256(`${userId}:${balance}`);
+    const hashedLeaf = hashData(`${userId}:${balance}`);
     mockAccounts.push({
       id: uuidv4(),
       userId,

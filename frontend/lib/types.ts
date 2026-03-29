@@ -15,8 +15,13 @@ export interface ProofOfReserves {
 export interface InclusionProof {
   id: string;
   wallet: string;
+  userId?: string;
   balance: string;
-  merkleProof: string[];
+  merkleProof: {
+    leaf: string;
+    siblings: string[];
+    pathIndices: number[];
+  };
   merkleRoot: string;
   leafIndex: number;
   verified: boolean;

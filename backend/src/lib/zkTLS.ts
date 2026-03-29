@@ -4,8 +4,10 @@ import Pino from 'pino';
 
 const logger = Pino({ name: 'zktls-client' });
 
-function keccak256(data: string): string {
-  const hash = createHash('keccak256');
+function hashData(data: string): string {
+  // Using sha256 as Node.js native alternative to keccak256
+  // For production Ethereum compatibility, consider using @noble/hashes
+  const hash = createHash('sha256');
   hash.update(data);
   return '0x' + hash.digest('hex');
 }
@@ -39,14 +41,14 @@ export async function attestBalances(
   const env = getEnv();
   
   const payload = JSON.stringify(rawData.map(d => ({ userId: d.userId, balance: d.balance })));
-  const mockSignature = keccak256(payload);
+  const mockSignature = hashData(payload);
   
   logger.info({ count: rawData.length }, 'Mock zkTLS attestation completed');
   
   return {
     verified: true,
     signature: mockSignature,
-    dataHash: keccak256(payload),
+    dataHash: hashData(payload),
     timestamp: Date.now(),
     sourceChain: 'sepolia',
   };
@@ -66,7 +68,7 @@ export async function verifyAttestation(
     }))
   );
   
-  const expectedHash = keccak256(payload);
+  const expectedHash = hashData(payload);
   
   if (signature.startsWith('0x') && signature.length > 100) {
     const derivedHash = `0x${Buffer.from(expectedHash.slice(2) + env.EXCHANGE_ID).toString('hex').slice(0, 130)}`;

@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ZK-Solvency API</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg-primary: #0a0e27;
+      --bg-secondary: #0f1435;
+      --bg-card: #141937;
+      --accent: #00ff87;
+      --accent-dim: rgba(0, 255, 135, 0.1);
+      --text-primary: #ffffff;
+      --text-secondary: #a0a0b0;
+      --text-muted: #6b7280;
+      --border: rgba(255, 255, 255, 0.1);
+      --success: #10b981;
+      --warning: #f59e0b;
+      --error: #ef4444;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Header */
+    .header {
+      padding: 40px 0;
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+    }
+
+    .header-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 24px;
+    }
+
+    .logo-section {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .logo-icon {
+      width: 56px;
+      height: 56px;
+      background: var(--accent-dim);
+      border: 2px solid rgba(0, 255, 135, 0.3);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .logo-icon svg {
+      width: 32px;
+      height: 32px;
+      color: var(--accent);
+    }
+
+    .logo-text h1 {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+
+    .logo-text span {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+
+    .status-badges {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .badge .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--text-muted);
+    }
+
+    .badge .dot.healthy {
+      background: var(--success);
+      box-shadow: 0 0 8px var(--success);
+    }
+
+    .badge .dot.unhealthy {
+      background: var(--error);
+      box-shadow: 0 0 8px var(--error);
+    }
+
+    .badge .dot.loading {
+      background: var(--warning);
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    /* Quick Links */
+    .quick-links {
+      padding: 32px 0;
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .quick-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 20px;
+      background: var(--accent);
+      color: var(--bg-primary);
+      text-decoration: none;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 14px;
+      transition: all 0.2s;
+    }
+
+    .quick-link:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 255, 135, 0.3);
+    }
+
+    .quick-link.secondary {
+      background: var(--bg-card);
+      color: var(--text-primary);
+      border: 1px solid var(--border);
+    }
+
+    .quick-link.secondary:hover {
+      border-color: var(--accent);
+      box-shadow: 0 8px 24px rgba(0, 255, 135, 0.1);
+    }
+
+    /* Main Content */
+    .main {
+      padding: 48px 0;
+    }
+
+    .section-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-title::before {
+      content: '';
+      width: 4px;
+      height: 24px;
+      background: var(--accent);
+      border-radius: 2px;
+    }
+
+    /* Endpoints Grid */
+    .endpoints-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 24px;
+      margin-bottom: 48px;
+    }
+
+    .endpoint-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      transition: all 0.2s;
+    }
+
+    .endpoint-card:hover {
+      border-color: rgba(0, 255, 135, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .endpoint-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .endpoint-icon {
+      width: 40px;
+      height: 40px;
+      background: var(--accent-dim);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .endpoint-icon svg {
+      width: 20px;
+      height: 20px;
+      color: var(--accent);
+    }
+
+    .endpoint-title {
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .endpoint-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .endpoint-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px;
+      background: var(--bg-secondary);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .endpoint-item:hover {
+      background: var(--bg-primary);
+    }
+
+    .method {
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      flex-shrink: 0;
+    }
+
+    .method.get {
+      background: rgba(16, 185, 129, 0.2);
+      color: #10b981;
+    }
+
+    .method.post {
+      background: rgba(59, 130, 246, 0.2);
+      color: #3b82f6;
+    }
+
+    .endpoint-path {
+      font-family: 'SF Mono', Monaco, 'Courier New', monospace;
+      font-size: 13px;
+      color: var(--text-secondary);
+      word-break: break-all;
+    }
+
+    /* Quick Start */
+    .quick-start {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      margin-bottom: 48px;
+    }
+
+    .command-block {
+      background: var(--bg-primary);
+      border-radius: 8px;
+      padding: 16px;
+      margin: 16px 0;
+      position: relative;
+      overflow-x: auto;
+    }
+
+    .command-block code {
+      font-family: 'SF Mono', Monaco, 'Courier New', monospace;
+      font-size: 13px;
+      color: var(--accent);
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+
+    .command-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .copy-btn {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      padding: 6px 12px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text-secondary);
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .copy-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .copy-btn.copied {
+      background: var(--accent);
+      color: var(--bg-primary);
+      border-color: var(--accent);
+    }
+
+    /* Footer */
+    .footer {
+      padding: 32px 0;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+
+    .footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .header-content {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .logo-section {
+        flex-direction: column;
+      }
+
+      .endpoints-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .quick-links {
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="container">
+      <div class="header-content">
+        <div class="logo-section">
+          <div class="logo-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+          </div>
+          <div class="logo-text">
+            <h1>ZK-Solvency API</h1>
+            <span>L3/L4 Protocol</span>
+          </div>
+        </div>
+        <div class="status-badges">
+          <div class="badge">
+            <span class="dot loading" id="api-status"></span>
+            <span id="api-text">API</span>
+          </div>
+          <div class="badge">
+            <span class="dot loading" id="redis-status"></span>
+            <span id="redis-text">Redis</span>
+          </div>
+          <div class="badge">
+            <span class="dot loading" id="db-status"></span>
+            <span id="db-text">Database</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Quick Links -->
+  <div class="container">
+    <div class="quick-links">
+      <a href="http://localhost:3000" class="quick-link" target="_blank">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/>
+        </svg>
+        Open Dashboard
+      </a>
+      <a href="/api/" class="quick-link secondary" target="_blank">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/>
+        </svg>
+        API JSON Docs
+      </a>
+      <a href="/api/health" class="quick-link secondary" target="_blank">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+        </svg>
+        Health Check
+      </a>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <main class="main">
+    <div class="container">
+      <h2 class="section-title">API Endpoints</h2>
+
+      <div class="endpoints-grid">
+        <!-- Health -->
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <div class="endpoint-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+              </svg>
+            </div>
+            <span class="endpoint-title">Health & Status</span>
+          </div>
+          <div class="endpoint-list">
+            <a href="/api/health" target="_blank" class="endpoint-item">
+              <span class="method get">GET</span>
+              <span class="endpoint-path">/api/health</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Proof of Reserves -->
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <div class="endpoint-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              </svg>
+            </div>
+            <span class="endpoint-title">Proof of Reserves</span>
+          </div>
+          <div class="endpoint-list">
+            <a href="/api/proof/latest" target="_blank" class="endpoint-item">
+              <span class="method get">GET</span>
+              <span class="endpoint-path">/api/proof/latest</span>
+            </a>
+            <a href="/api/proof/history" target="_blank" class="endpoint-item">
+              <span class="method get">GET</span>
+              <span class="endpoint-path">/api/proof/history</span>
+            </a>
+            <a href="/api/proof/stream" target="_blank" class="endpoint-item">
+              <span class="method get">GET</span>
+              <span class="endpoint-path">/api/proof/stream</span>
+            </a>
+            <div class="endpoint-item">
+              <span class="method post">POST</span>
+              <span class="endpoint-path">/api/proof/simulate</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Solvency -->
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <div class="endpoint-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/>
+              </svg>
+            </div>
+            <span class="endpoint-title">Solvency Management</span>
+          </div>
+          <div class="endpoint-list">
+            <a href="/api/solvency/latest-proof" target="_blank" class="endpoint-item">
+              <span class="method get">GET</span>
+              <span class="endpoint-path">/api/solvency/latest-proof</span>
+            </a>
+            <a href="/api/solvency/history?limit=10" target="_blank" class="endpoint-item">
+              <span class="method get">GET</span>
+              <span class="endpoint-path">/api/solvency/history</span>
+            </a>
+            <div class="endpoint-item">
+              <span class="method post">POST</span>
+              <span class="endpoint-path">/api/solvency/simulate</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Inclusion Proofs -->
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <div class="endpoint-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+              </svg>
+            </div>
+            <span class="endpoint-title">Inclusion Proofs</span>
+          </div>
+          <div class="endpoint-list">
+            <div class="endpoint-item">
+              <span class="method post">POST</span>
+              <span class="endpoint-path">/api/inclusion-proof/verify</span>
+            </div>
+            <a href="/api/inclusion-proof/history" target="_blank" class="endpoint-item">
+              <span class="method get">GET</span>
+              <span class="endpoint-path">/api/inclusion-proof/history</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Auditor -->
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <div class="endpoint-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+            </div>
+            <span class="endpoint-title">Auditor Tools</span>
+          </div>
+          <div class="endpoint-list">
+            <a href="/api/auditor/verify" target="_blank" class="endpoint-item">
+              <span class="method get">GET</span>
+              <span class="endpoint-path">/api/auditor/verify</span>
+            </a>
+            <a href="/api/auditor/circuit-registry" target="_blank" class="endpoint-item">
+              <span class="method get">GET</span>
+              <span class="endpoint-path">/api/auditor/circuit-registry</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Attestation -->
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <div class="endpoint-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+              </svg>
+            </div>
+            <span class="endpoint-title">Attestation</span>
+          </div>
+          <div class="endpoint-list">
+            <div class="endpoint-item">
+              <span class="method post">POST</span>
+              <span class="endpoint-path">/api/attest/balances</span>
+            </div>
+            <a href="/api/attest/status/demo-exchange" target="_blank" class="endpoint-item">
+              <span class="method get">GET</span>
+              <span class="endpoint-path">/api/attest/status/:exchangeId</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Start -->
+      <h2 class="section-title">Quick Start</h2>
+      <div class="quick-start">
+        <div class="command-label">Generate Test Data</div>
+        <div class="command-block">
+          <code>curl -X POST http://localhost:3001/api/solvency/simulate -H "Content-Type: application/json" -d '{"accountCount": 100}'</code>
+          <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+        </div>
+
+        <div class="command-label">Get Latest Proof</div>
+        <div class="command-block">
+          <code>curl http://localhost:3001/api/proof/latest</code>
+          <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+        </div>
+
+        <div class="command-label">Verify User Inclusion</div>
+        <div class="command-block">
+          <code>curl -X POST http://localhost:3001/api/inclusion-proof/verify -H "Content-Type: application/json" -d '{"userId": "user_0", "signature": "demo"}'</code>
+          <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+        </div>
+
+        <div class="command-label">Check System Health</div>
+        <div class="command-block">
+          <code>curl http://localhost:3001/api/health</code>
+          <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p>ZK-Solvency API v1.0.0 | <a href="http://localhost:3000" target="_blank">Dashboard</a> | <a href="/api/" target="_blank">API Docs</a></p>
+    </div>
+  </footer>
+
+  <script>
+    // Fetch health status and update badges
+    async function checkHealth() {
+      try {
+        const response = await fetch('/api/health');
+        const data = await response.json();
+
+        // Update API status
+        const apiDot = document.getElementById('api-status');
+        apiDot.classList.remove('loading');
+        apiDot.classList.add('healthy');
+
+        // Update Redis status
+        const redisDot = document.getElementById('redis-status');
+        redisDot.classList.remove('loading');
+        redisDot.classList.add(data.checks.redis.status === 'healthy' ? 'healthy' : 'unhealthy');
+
+        // Update Database status
+        const dbDot = document.getElementById('db-status');
+        dbDot.classList.remove('loading');
+        dbDot.classList.add(data.checks.database.status === 'healthy' ? 'healthy' : 'unhealthy');
+
+      } catch (error) {
+        // API is down
+        document.getElementById('api-status').classList.remove('loading');
+        document.getElementById('api-status').classList.add('unhealthy');
+        document.getElementById('redis-status').classList.remove('loading');
+        document.getElementById('redis-status').classList.add('unhealthy');
+        document.getElementById('db-status').classList.remove('loading');
+        document.getElementById('db-status').classList.add('unhealthy');
+      }
+    }
+
+    // Copy command to clipboard
+    function copyCommand(btn) {
+      const code = btn.parentElement.querySelector('code').textContent;
+      navigator.clipboard.writeText(code).then(() => {
+        btn.textContent = 'Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = 'Copy';
+          btn.classList.remove('copied');
+        }, 2000);
+      });
+    }
+
+    // Check health on page load
+    checkHealth();
+
+    // Refresh health status every 30 seconds
+    setInterval(checkHealth, 30000);
+  </script>
+</body>
+</html>
